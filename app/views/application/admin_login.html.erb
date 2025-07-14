@@ -1,0 +1,24 @@
+# app/views/application/admin_login.html.erb
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Login</title>
+</head>
+<body>
+  <h2>Admin Login</h2>
+  <% if flash[:alert] %>
+    <p style="color: red;"><%= flash[:alert] %></p>
+  <% end %>
+  <%= form_with url: create_admin_session_path, method: :post do |form| %>
+    <div>
+      <%= form.label :email %>
+      <%= form.email_field :email %>
+    </div>
+    <div>
+      <%= form.label :password %>
+      <%= form.password_field :password %>
+    </div>
+    <%= form.submit 'Login' %>
+  <% end %>
+</body>
+</html>

@@ -49,3 +49,6 @@ group :development, :test do
   gem 'factory_bot_rails'
   gem 'faker'
 end
+gem 'activeadmin'
+gem 'sprockets-rails' # Required for asset pipeline
+gem 'sassc-rails'     # For Active Admin CSS

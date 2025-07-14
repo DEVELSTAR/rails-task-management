@@ -5,6 +5,13 @@ class Task < ApplicationRecord
   validates :status, inclusion: { in: %w(todo in_progress done) }
   belongs_to :user
 
+  def self.ransackable_attributes(auth_object = nil)
+    %w[id title description status due_date user_id created_at updated_at]
+  end
+  
+  def self.ransackable_associations(auth_object = nil)
+    ["user"]
+  end
   private
 
   def title_cannot_start_with_draft
