@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
+      post 'register', to: 'users#register'
+      post 'login', to: 'users#login'
       resources :tasks do
         collection do
           delete 'bulk_destroy', to: 'tasks#bulk_destroy'

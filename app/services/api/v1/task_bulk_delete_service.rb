@@ -2,15 +2,16 @@
 module Api
   module V1
     class TaskBulkDeleteService
-      def initialize(task_ids)
+      def initialize(task_ids, user)
         @task_ids = task_ids
+        @user = user
       end
 
       def call
         return { success: false, errors: ['No task IDs provided'] } if @task_ids.blank?
 
-        tasks = Task.where(id: @task_ids)
-        found_ids = tasks.pluck(:id).map(&:to_s) # Convert to strings for comparison
+        tasks = @user.tasks.where(id: @task_ids)
+        found_ids = tasks.pluck(:id).map(&:to_s)
         not_found_ids = @task_ids - found_ids
 
         return { success: false, errors: ["Tasks with IDs #{not_found_ids.join(', ')} not found"] } if not_found_ids.any?

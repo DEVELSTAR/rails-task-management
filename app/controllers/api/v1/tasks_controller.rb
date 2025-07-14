@@ -1,56 +1,21 @@
+
+# app/controllers/api/v1/tasks_controller.rb
 module Api
   module V1
     class TasksController < ApplicationController
       before_action :set_task, only: [:show, :update, :destroy]
 
-      def bulk_destroy
-        result = TaskBulkDeleteService.new(params[:task_ids]).call
-        if result[:success]
-          render json: { message: result[:message] }, status: :ok
-        else
-          render json: { errors: result[:errors] }, status: :unprocessable_entity
-        end
-      end
-
-      def delete_all_task
-        if Task.destroy_all
-          render json: { messages: "Task destroyed successfully!" }, status: :ok
-        else
-          render json: { errors: @task.errors.full_messages }, status: :unprocessable_entity
-        end
-      end
-
-      def search
-        tasks = TaskSearchService.new(search_params).call
+      def index
+        tasks = current_user.tasks
         render json: tasks
       end
 
-      def index
-        render json: Task.all, status: :ok
-      end
-
       def show
-        render json: @task, status: :ok
-      end
-
-      def update
-        if @task.update(task_params)
-          render json: @task, status: :ok
-        else
-          render json: { errors: @task.errors.full_messages }, status: :unprocessable_entity
-        end
-      end
-
-      def destroy
-        if @task.destroy
-          render json: { messages: "Task destroyed successfully!" }, status: :ok
-        else
-          render json: { errors: @task.errors.full_messages }, status: :unprocessable_entity
-        end
+        render json: @task
       end
 
       def create
-        task = Task.new(task_params)
+        task = current_user.tasks.new(task_params)
         if task.save
           render json: task, status: :created
         else
@@ -58,12 +23,39 @@ module Api
         end
       end
 
+      def update
+        if @task.update(task_params)
+          render json: @task
+        else
+          render json: { errors: @task.errors.full_messages }, status: :unprocessable_entity
+        end
+      end
+
+      def destroy
+        @task.destroy
+        head :no_content
+      end
+
+      def bulk_destroy
+        result = TaskBulkDeleteService.new(params[:task_ids], current_user).call
+        if result[:success]
+          render json: { message: result[:message] }, status: :ok
+        else
+          render json: { errors: result[:errors] }, status: :unprocessable_entity
+        end
+      end
+
+      def search
+        tasks = TaskSearchService.new(search_params, current_user).call
+        render json: tasks
+      end
+
       private
 
       def set_task
-        @task = Task.find(params[:id])
+        @task = current_user.tasks.find(params[:id])
       rescue ActiveRecord::RecordNotFound
-        render json: { error: "Task not found" }, status: :not_found
+        render json: { error: 'Task not found' }, status: :not_found
       end
 
       def task_params

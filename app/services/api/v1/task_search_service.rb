@@ -1,12 +1,14 @@
+# app/services/task_search_service.rb
 module Api
   module V1
     class TaskSearchService
-      def initialize(params)
+      def initialize(params, user)
         @params = params
+        @user = user
       end
 
       def call
-        tasks = Task.all
+        tasks = @user.tasks
 
         tasks = tasks.where(status: @params[:status]) if @params[:status].present?
         
