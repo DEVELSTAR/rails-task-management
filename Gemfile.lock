@@ -44,6 +44,7 @@ GEM
       erubi (~> 1.11)
       rails-dom-testing (~> 2.2)
       rails-html-sanitizer (~> 1.6)
+    active_admin_theme (1.1.4)
     activeadmin (3.3.0)
       arbre (~> 1.2, >= 1.2.1)
       csv
@@ -130,6 +131,8 @@ GEM
     ffi (1.17.2-x86_64-darwin)
     ffi (1.17.2-x86_64-linux-gnu)
     ffi (1.17.2-x86_64-linux-musl)
+    font-awesome-sass (6.5.2)
+      sassc (~> 2.0)
     formtastic (5.0.0)
       actionpack (>= 6.0.0)
     formtastic_i18n (0.7.0)
@@ -420,6 +423,7 @@ PLATFORMS
   x86_64-linux-musl
 
 DEPENDENCIES
+  active_admin_theme
   activeadmin
   bcrypt (~> 3.1.7)
   bootsnap
@@ -428,6 +432,7 @@ DEPENDENCIES
   debug
   factory_bot_rails
   faker
+  font-awesome-sass (~> 6.5.2)
   jwt
   kamal
   pg (~> 1.1)

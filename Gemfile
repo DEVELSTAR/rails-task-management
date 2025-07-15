@@ -52,3 +52,5 @@ end
 gem 'activeadmin'
 gem 'sprockets-rails' # Required for asset pipeline
 gem 'sassc-rails'     # For Active Admin CSS
+gem 'active_admin_theme'
+gem 'font-awesome-sass', '~> 6.5.2'
