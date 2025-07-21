@@ -8,20 +8,44 @@
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
   <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
     <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Admin Login</h2>
+
     <% if flash[:alert] %>
       <p class="text-red-500 text-sm mb-4 text-center"><%= flash[:alert] %></p>
     <% end %>
+
     <%= form_with url: create_admin_session_path, method: :post, class: "space-y-6" do |form| %>
       <div>
         <%= form.label :email, class: "block text-sm font-medium text-gray-700" %>
         <%= form.email_field :email, class: "mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
       </div>
+
       <div>
         <%= form.label :password, class: "block text-sm font-medium text-gray-700" %>
-        <%= form.password_field :password, class: "mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
+        <%= form.password_field :password, id: "password-field", class: "mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
+
+        <!-- ✅ Show Password Checkbox -->
+        <div class="mt-2 flex items-center space-x-2">
+          <input type="checkbox" id="toggle-password" class="h-4 w-4 text-blue-600 border-gray-300 rounded">
+          <label for="toggle-password" class="text-sm text-gray-600">Show Password</label>
+        </div>
       </div>
+
       <%= form.submit 'Login', class: "w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200" %>
     <% end %>
   </div>
+
+  <!-- ✅ Plain JS that works -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const checkbox = document.getElementById("toggle-password");
+      const passwordField = document.getElementById("password-field");
+
+      if (checkbox && passwordField) {
+        checkbox.addEventListener("change", function () {
+          passwordField.type = this.checked ? "text" : "password";
+        });
+      }
+    });
+  </script>
 </body>
 </html>

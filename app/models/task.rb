@@ -4,6 +4,9 @@ class Task < ApplicationRecord
   validate :title_cannot_start_with_draft
   validates :status, inclusion: { in: %w(todo in_progress done) }
   belongs_to :user
+  scope :todo, -> { where(status: 'todo') }
+  scope :in_progress, -> { where(status: 'in_progress') }
+  scope :done, -> { where(status: 'done') }
 
   def self.ransackable_attributes(auth_object = nil)
     %w[id title description status due_date user_id created_at updated_at]
