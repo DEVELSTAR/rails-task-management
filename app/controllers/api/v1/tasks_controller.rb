@@ -6,18 +6,18 @@ module Api
       before_action :set_task, only: [:show, :update, :destroy]
 
       def index
-        tasks = current_user.tasks
-        render json: tasks
+        tasks = current_user.tasks.page(params[:page]).per(params[:per_page] || 10)
+        render json: TaskSerializer.new(tasks, meta: paginate(tasks)).serializable_hash
       end
 
       def show
-        render json: @task
+        render json: TaskSerializer.new(@task)
       end
 
       def create
         task = current_user.tasks.new(task_params)
         if task.save
-          render json: task, status: :created
+          render json: TaskSerializer.new(task), status: :created
         else
           render json: { errors: task.errors.full_messages }, status: :unprocessable_entity
         end
@@ -25,7 +25,7 @@ module Api
 
       def update
         if @task.update(task_params)
-          render json: @task
+          render json: TaskSerializer.new(@task)
         else
           render json: { errors: @task.errors.full_messages }, status: :unprocessable_entity
         end
@@ -45,9 +45,20 @@ module Api
         end
       end
 
+      def delete_all
+        tasks = Task.destroy_all
+
+        if tasks.any?
+          render json: { message: "All tasks successfully deleted!" }, status: :ok
+        else
+          render json: { errors: ["No tasks to delete"] }, status: :unprocessable_entity
+        end
+      end
+
       def search
         tasks = TaskSearchService.new(search_params, current_user).call
-        render json: tasks
+        tasks = tasks.page(params[:page]).per(params[:per_page] || 10)
+        render json: TaskSerializer.new(tasks, meta: paginate(tasks)).serializable_hash
       end
 
       private

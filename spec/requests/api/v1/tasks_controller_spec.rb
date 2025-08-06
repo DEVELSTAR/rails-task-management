@@ -21,21 +21,26 @@ RSpec.describe Api::V1::TasksController, type: :request do
     { task: { title: '' } }
   end
 
+  def json
+    JSON.parse(response.body)
+  end
+
   describe 'GET /api/v1/tasks' do
     it 'returns all tasks for authenticated user' do
       create(:task, user: user, title: 'Task 1')
-      create(:task, user: create(:user), title: 'Task 2') # Different user
+      create(:task, user: create(:user), title: 'Task 2') # other user
 
       get '/api/v1/tasks', headers: headers
       expect(response).to have_http_status(:ok)
-      expect(JSON.parse(response.body).size).to eq(1)
-      expect(JSON.parse(response.body).first).to include('title' => 'Task 1')
+      expect(json['data'].size).to eq(1)
+      expect(json['data'].first['attributes']['title']).to eq('Task 1')
+      expect(json['meta']).to include('total_count' => 1)
     end
 
     it 'returns unauthorized without token' do
       get '/api/v1/tasks'
       expect(response).to have_http_status(:unauthorized)
-      expect(JSON.parse(response.body)).to include('error' => 'Unauthorized')
+      expect(json).to include('error' => 'Unauthorized')
     end
   end
 
@@ -45,13 +50,13 @@ RSpec.describe Api::V1::TasksController, type: :request do
     it 'returns a task' do
       get "/api/v1/tasks/#{task.id}", headers: headers
       expect(response).to have_http_status(:ok)
-      expect(JSON.parse(response.body)).to include('title' => task.title)
+      expect(json['data']['attributes']['title']).to eq(task.title)
     end
 
     it 'returns 404 for non-existent task' do
       get '/api/v1/tasks/999', headers: headers
       expect(response).to have_http_status(:not_found)
-      expect(JSON.parse(response.body)).to include('error' => 'Task not found')
+      expect(json).to include('error' => 'Task not found')
     end
   end
 
@@ -62,13 +67,13 @@ RSpec.describe Api::V1::TasksController, type: :request do
       }.to change { user.tasks.count }.by(1)
 
       expect(response).to have_http_status(:created)
-      expect(JSON.parse(response.body)).to include('title' => 'Test Task')
+      expect(json['data']['attributes']['title']).to eq('Test Task')
     end
 
     it 'returns errors for invalid attributes' do
       post '/api/v1/tasks', params: invalid_attributes, headers: headers
       expect(response).to have_http_status(:unprocessable_entity)
-      expect(JSON.parse(response.body)['errors']).to include("Title can't be blank")
+      expect(json['errors']).to include("Title can't be blank")
     end
   end
 
@@ -78,14 +83,14 @@ RSpec.describe Api::V1::TasksController, type: :request do
     it 'updates a task with valid attributes' do
       patch "/api/v1/tasks/#{task.id}", params: { task: { title: 'Updated Task' } }, headers: headers
       expect(response).to have_http_status(:ok)
-      expect(JSON.parse(response.body)).to include('title' => 'Updated Task')
+      expect(json['data']['attributes']['title']).to eq('Updated Task')
       expect(task.reload.title).to eq('Updated Task')
     end
 
     it 'returns errors for invalid attributes' do
       patch "/api/v1/tasks/#{task.id}", params: invalid_attributes, headers: headers
       expect(response).to have_http_status(:unprocessable_entity)
-      expect(JSON.parse(response.body)['errors']).to include("Title can't be blank")
+      expect(json['errors']).to include("Title can't be blank")
     end
 
     it 'returns 404 for non-existent task' do
@@ -95,7 +100,7 @@ RSpec.describe Api::V1::TasksController, type: :request do
   end
 
   describe 'DELETE /api/v1/tasks/:id' do
-    let(:task) { create(:task, user: user) }
+    let!(:task) { create(:task, user: user) }
 
     it 'deletes a task' do
       delete "/api/v1/tasks/#{task.id}", headers: headers
@@ -119,20 +124,20 @@ RSpec.describe Api::V1::TasksController, type: :request do
       }.to change { user.tasks.count }.by(-2)
 
       expect(response).to have_http_status(:ok)
-      expect(JSON.parse(response.body)).to include('message' => '2 tasks deleted successfully')
+      expect(json['message']).to eq('2 tasks deleted successfully')
     end
 
     it 'returns errors for non-existent task IDs' do
       delete '/api/v1/tasks/bulk_destroy', params: { task_ids: [task1.id, 999] }, headers: headers
       expect(response).to have_http_status(:unprocessable_entity)
-      expect(JSON.parse(response.body)['errors']).to include('Tasks with IDs 999 not found')
+      expect(json['errors']).to include('Tasks with IDs 999 not found')
       expect(Task.exists?(task1.id)).to be_truthy
     end
 
     it 'returns errors for empty task IDs' do
       delete '/api/v1/tasks/bulk_destroy', params: { task_ids: [] }, headers: headers
       expect(response).to have_http_status(:unprocessable_entity)
-      expect(JSON.parse(response.body)['errors']).to include("Tasks with IDs  not found")
+      expect(json['errors']).to include("Tasks with IDs  not found")
     end
   end
 
@@ -143,28 +148,28 @@ RSpec.describe Api::V1::TasksController, type: :request do
     it 'filters tasks by status' do
       get '/api/v1/tasks/search', params: { status: 'todo' }, headers: headers
       expect(response).to have_http_status(:ok)
-      expect(JSON.parse(response.body).size).to eq(1)
-      expect(JSON.parse(response.body).first).to include('title' => 'Project Task')
+      expect(json['data'].size).to eq(1)
+      expect(json['data'].first['attributes']['title']).to eq('Project Task')
     end
 
     it 'filters tasks by title' do
       get '/api/v1/tasks/search', params: { title: 'Project' }, headers: headers
       expect(response).to have_http_status(:ok)
-      expect(JSON.parse(response.body).size).to eq(1)
-      expect(JSON.parse(response.body).first).to include('title' => 'Project Task')
+      expect(json['data'].size).to eq(1)
+      expect(json['data'].first['attributes']['title']).to eq('Project Task')
     end
 
     it 'filters tasks by date range' do
       get '/api/v1/tasks/search', params: { start_date: '2025-07-01', end_date: '2025-07-31' }, headers: headers
       expect(response).to have_http_status(:ok)
-      expect(JSON.parse(response.body).size).to eq(1)
-      expect(JSON.parse(response.body).first).to include('title' => 'Project Task')
+      expect(json['data'].size).to eq(1)
+      expect(json['data'].first['attributes']['title']).to eq('Project Task')
     end
 
     it 'returns empty array when no tasks match' do
       get '/api/v1/tasks/search', params: { status: 'in_progress' }, headers: headers
       expect(response).to have_http_status(:ok)
-      expect(JSON.parse(response.body)).to eq([])
+      expect(json['data']).to eq([])
     end
   end
 end

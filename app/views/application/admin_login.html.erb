@@ -21,7 +21,7 @@
 
       <div>
         <%= form.label :password, class: "block text-sm font-medium text-gray-700" %>
-        <%= form.password_field :password, id: "password-field", class: "mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
+        <%= form.password_field :password, id: "password", class: "mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500", required: true %>
 
         <!-- ✅ Show Password Checkbox -->
         <div class="mt-2 flex items-center space-x-2">
@@ -34,18 +34,16 @@
     <% end %>
   </div>
 
-  <!-- ✅ Plain JS that works -->
   <script>
     document.addEventListener("DOMContentLoaded", function () {
       const checkbox = document.getElementById("toggle-password");
-      const passwordField = document.getElementById("password-field");
+      const passwordField = document.getElementById("password");
 
-      if (checkbox && passwordField) {
-        checkbox.addEventListener("change", function () {
-          passwordField.type = this.checked ? "text" : "password";
-        });
-      }
+      checkbox.addEventListener("change", function () {
+        passwordField.type = this.checked ? "text" : "password";
+      });
     });
   </script>
+
 </body>
 </html>

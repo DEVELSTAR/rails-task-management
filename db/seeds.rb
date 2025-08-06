@@ -7,3 +7,18 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+
+# db/seeds.rb
+require 'faker' # For generating random data
+
+user = User.first
+10.times do
+user.tasks.create!(
+    title: Faker::Lorem.sentence(word_count: 3),
+    description: Faker::Lorem.paragraph,
+    status: %w[todo in_progress done].sample,
+    due_date: Faker::Date.forward(days: 30)
+)
+end
+
+puts "Seeded #{Task.count} tasks!"

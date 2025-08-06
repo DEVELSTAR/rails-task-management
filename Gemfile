@@ -49,8 +49,18 @@ group :development, :test do
   gem 'factory_bot_rails'
   gem 'faker'
 end
+
+group :test do
+  gem 'capybara'
+  gem 'selenium-webdriver' # or 'webdrivers' if needed
+  gem 'simplecov', require: false
+end
+
+
 gem 'activeadmin'
 gem 'sprockets-rails' # Required for asset pipeline
 gem 'sassc-rails'     # For Active Admin CSS
 gem 'active_admin_theme'
 gem 'font-awesome-sass', '~> 6.5.2'
+gem 'kaminari'
+gem 'jsonapi-serializer'

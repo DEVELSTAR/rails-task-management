@@ -6,11 +6,17 @@ Rails.application.routes.draw do
   delete 'destroy_admin_session', to: 'application#destroy_admin_session'
   namespace :api do
     namespace :v1 do
-      post 'register', to: 'users#register'
-      post 'login', to: 'users#login'
+      resources :users, only: [:index, :show] do
+        collection do
+          post 'register', to: 'users#register'
+          post 'login', to: 'users#login'
+        end
+      end
+
       resources :tasks, only: [:index, :show, :create, :update, :destroy] do
         collection do
           delete 'bulk_destroy', to: 'tasks#bulk_destroy'
+          delete 'delete_all', to: 'tasks#delete_all'
           get 'search', to: 'tasks#search'
         end
       end
