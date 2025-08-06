@@ -20,7 +20,14 @@ Rails.application.routes.draw do
           get 'search', to: 'tasks#search'
         end
       end
+      
+      resources :cat_facts, only: [:index, :show, :destroy] do
+        collection do
+          get 'random_facts', to: 'cat_facts#random_facts'
+        end
+      end
     end
   end
+
   get "up" => "rails/health#show", as: :rails_health_check
 end

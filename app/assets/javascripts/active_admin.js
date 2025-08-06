@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
       // Remove from DOM after fade-out to prevent interaction
       setTimeout(() => {
         flashContainer.remove();
-      }, 500); // Match transition duration
-    }, 5000); // 5 seconds delay
+      }, 200); // Match transition duration
+    }, 2000); // 5 seconds delay
   }
 });
