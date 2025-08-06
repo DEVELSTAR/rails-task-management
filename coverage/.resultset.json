@@ -45,21 +45,6 @@
           null,
           0,
           0,
-          null,
-          0,
-          null,
-          0,
-          0,
-          0,
-          0,
-          null,
-          0,
-          0,
-          0,
-          0,
-          null,
-          0,
-          0,
           0,
           null,
           0,
@@ -67,6 +52,13 @@
           0,
           0,
           0,
+          0,
+          0,
+          0,
+          null,
+          0,
+          0,
+          null,
           0,
           0,
           0,
@@ -79,7 +71,8 @@
           0,
           0,
           0,
-          0
+          0,
+          null
         ],
         "branches": {}
       },
@@ -321,13 +314,6 @@
           null,
           0,
           0,
-          null,
-          0,
-          0,
-          0,
-          0,
-          0,
-          null,
           0,
           0,
           null,
@@ -336,6 +322,18 @@
           0,
           0,
           0,
+          0,
+          0,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          null,
+          0,
+          null,
           0,
           0,
           0,
@@ -588,6 +586,16 @@
       "/Users/akibu/Desktop/STAR/Programming/task_manager/app/models/cat_fact.rb": {
         "lines": [
           0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "branches": {}
+      },
+      "/Users/akibu/Desktop/STAR/Programming/task_manager/app/models/quran_verse.rb": {
+        "lines": [
+          0,
           0
         ],
         "branches": {}
@@ -650,6 +658,42 @@
       "/Users/akibu/Desktop/STAR/Programming/task_manager/app/serializers/user_serializer.rb": {
         "lines": [
           null,
+          0,
+          0,
+          0,
+          0
+        ],
+        "branches": {}
+      },
+      "/Users/akibu/Desktop/STAR/Programming/task_manager/app/services/api/v1/cat_fact_fetcher_service.rb": {
+        "lines": [
+          null,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          null,
+          0,
+          0,
+          null,
+          0,
+          0,
+          0,
+          0,
+          null,
+          0,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
           0,
           0,
           0,
@@ -742,6 +786,6 @@
         "branches": {}
       }
     },
-    "timestamp": 1754485498
+    "timestamp": 1754487627
   }
 }

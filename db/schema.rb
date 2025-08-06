@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_06_130458) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_06_135643) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -41,6 +41,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_06_130458) do
     t.string "source", default: "catfact.ninja"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "quran_verses", force: :cascade do |t|
+    t.string "surah_name"
+    t.string "verse_number"
+    t.text "text"
+    t.string "source"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "language"
   end
 
   create_table "tasks", force: :cascade do |t|

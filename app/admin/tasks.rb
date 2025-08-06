@@ -20,7 +20,9 @@ ActiveAdmin.register Task do
     column :status
     column :due_date
     column :user
-    column :created_at
+    column :created_at do |col|
+      formatted_time_ago(col.created_at)
+    end
     actions defaults: true do |task|
       next_status = case task.status
                     when "todo" then "in_progress"

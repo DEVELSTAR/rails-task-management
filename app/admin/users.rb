@@ -6,7 +6,9 @@ ActiveAdmin.register User do
     selectable_column
     id_column
     column :email
-    column :created_at
+    column :created_at do |col|
+      formatted_time_ago(col.created_at)
+    end
     actions
   end
 

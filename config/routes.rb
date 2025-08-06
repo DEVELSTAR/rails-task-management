@@ -21,9 +21,15 @@ Rails.application.routes.draw do
         end
       end
       
-      resources :cat_facts, only: [:index, :show, :destroy] do
+      resources :cat_facts, only: [:index, :destroy] do
         collection do
-          get 'random_facts', to: 'cat_facts#random_facts'
+          post 'random_facts', to: 'cat_facts#random_facts'
+        end
+      end
+
+      resources :quran_verses, only: [:index, :destroy] do
+        collection do
+          post :fetch_verse
         end
       end
     end
