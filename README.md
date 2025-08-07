@@ -84,6 +84,29 @@
 
 ---
 
+### Ignore Files
+
+* View untracked, non-ignored files:
+
+  ```bash
+  git ls-files --others --exclude-standard
+  ```
+
+* View ignored files:
+
+  ```bash
+  git status --ignored
+  ```
+
+* Remove tracked files that should be ignored:
+
+  ```bash
+  git rm --cached path/to/file
+  git commit -m "Remove ignored file"
+  ```
+
+---
+
 ## ✅ Summary Tags
 
 ```
