@@ -1,7 +1,7 @@
 # app/admin/quran_verses.rb
 ActiveAdmin.register QuranVerse do
   menu priority: 101
-  actions :all, except: [:new, :edit]
+  actions :all, except: [ :new, :edit ]
 
   LANGUAGES = {
     "English (Asad)" => "en.asad",

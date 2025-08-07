@@ -14,7 +14,7 @@ module Api
         verse.destroy
         head :no_content
       rescue ActiveRecord::RecordNotFound
-        render json: { error: 'Verse not found' }, status: :not_found
+        render json: { error: "Verse not found" }, status: :not_found
       end
 
       def fetch_verse

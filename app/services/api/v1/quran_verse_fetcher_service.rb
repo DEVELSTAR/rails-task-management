@@ -1,6 +1,6 @@
 # app/services/quran_verse_fetcher_service.rb
-require 'net/http'
-require 'json'
+require "net/http"
+require "json"
 module Api
   module V1
     class QuranVerseFetcherService

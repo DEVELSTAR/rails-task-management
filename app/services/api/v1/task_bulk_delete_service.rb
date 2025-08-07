@@ -8,13 +8,13 @@ module Api
       end
 
       def call
-        return { success: false, errors: ['No task IDs provided'] } if @task_ids.blank?
+        return { success: false, errors: [ "No task IDs provided" ] } if @task_ids.blank?
 
         tasks = @user.tasks.where(id: @task_ids)
         found_ids = tasks.pluck(:id).map(&:to_s)
         not_found_ids = @task_ids - found_ids
 
-        return { success: false, errors: ["Tasks with IDs #{not_found_ids.join(', ')} not found"] } if not_found_ids.any?
+        return { success: false, errors: [ "Tasks with IDs #{not_found_ids.join(', ')} not found" ] } if not_found_ids.any?
 
         deleted_count = tasks.destroy_all.count
         { success: true, message: "#{deleted_count} tasks deleted successfully" }

@@ -1,5 +1,5 @@
 # app/admin/dashboard.rb
-require 'ostruct'
+require "ostruct"
 
 ActiveAdmin.register_page "Dashboard" do
   menu priority: 1, label: "Dashboard"

@@ -56,14 +56,4 @@ RSpec.describe "Admin::Users", type: :feature do
     user.reload
     expect(user.authenticate("userpass")).to be_truthy
   end
-
-#   it "deletes a user", js: true do
-#     visit admin_users_path
-
-#     accept_confirm do
-#       click_link "Delete", href: admin_user_path(user)
-#     end
-
-#     expect(page).not_to have_content(user.email)
-#   end
 end

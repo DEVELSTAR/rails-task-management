@@ -3,8 +3,8 @@ module Api
   module V1
     class CatFactsController < ApplicationController
       skip_before_action :authenticate_user
-      require 'net/http'
-      require 'json'
+      require "net/http"
+      require "json"
 
       def index
         facts = CatFact.page(params[:page]).per(params[:per_page] || 10)
@@ -16,9 +16,9 @@ module Api
         fact.destroy
         head :no_content
       rescue ActiveRecord::RecordNotFound
-        render json: { error: 'Cat fact not found' }, status: :not_found
+        render json: { error: "Cat fact not found" }, status: :not_found
       end
-      
+
       def random_facts
         fact = CatFactFetcherService.call
         render json: fact, status: :created

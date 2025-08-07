@@ -11,10 +11,10 @@ gem "puma", ">= 5.0"
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 gem "bcrypt", "~> 3.1.7"
-gem 'jwt'
+gem "jwt"
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem "tzinfo-data", platforms: %i[ windows jruby ]
+gem "tzinfo-data", platforms: %i[windows jruby]
 
 # Use the database-backed adapters for Rails.cache, Active Job, and Action Cable
 gem "solid_cache"
@@ -38,29 +38,28 @@ gem "thruster", require: false
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
-  gem "debug", platforms: %i[ mri windows ], require: "debug/prelude" 
-  gem 'byebug', '~> 11.1', '>= 11.1.3'
+  gem "debug", platforms: %i[mri windows], require: "debug/prelude"
+  gem "byebug", "~> 11.1", ">= 11.1.3"
   # Static analysis for security vulnerabilities [https://brakemanscanner.org/]
-  gem "brakeman", require: false
+  gem "brakeman", "~> 7.1", require: false
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
-  gem 'rspec-rails'
-  gem 'factory_bot_rails'
-  gem 'faker'
+  gem "rspec-rails"
+  gem "factory_bot_rails"
+  gem "faker"
 end
 
 group :test do
-  gem 'capybara'
-  gem 'selenium-webdriver'
-  gem 'simplecov', require: false
+  gem "capybara"
+  gem "selenium-webdriver"
+  gem "simplecov", require: false
 end
 
-
-gem 'activeadmin'
-gem 'sprockets-rails' # Required for asset pipeline
-gem 'sassc-rails'     # For Active Admin CSS
-gem 'active_admin_theme'
-gem 'font-awesome-sass', '~> 6.5.2'
-gem 'kaminari'
-gem 'jsonapi-serializer'
+gem "activeadmin"
+gem "sprockets-rails" # Required for asset pipeline
+gem "sassc-rails"     # For Active Admin CSS
+gem "active_admin_theme"
+gem "font-awesome-sass", "~> 6.5.2"
+gem "kaminari"
+gem "jsonapi-serializer"

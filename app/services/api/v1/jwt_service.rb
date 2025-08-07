@@ -1,10 +1,10 @@
-require 'jwt'
+require "jwt"
 
 module Api
   module V1
     class JwtService
       SECRET_KEY = Rails.application.credentials.secret_key_base
-      ALGORITHM = 'HS256'
+      ALGORITHM = "HS256"
 
       def self.encode(payload)
         JWT.encode(payload, SECRET_KEY, ALGORITHM)

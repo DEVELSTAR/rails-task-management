@@ -3,7 +3,7 @@
 module Api
   module V1
     class TasksController < ApplicationController
-      before_action :set_task, only: [:show, :update, :destroy]
+      before_action :set_task, only: [ :show, :update, :destroy ]
 
       def index
         tasks = current_user.tasks.page(params[:page]).per(params[:per_page] || 10)
@@ -51,7 +51,7 @@ module Api
         if tasks.any?
           render json: { message: "All tasks successfully deleted!" }, status: :ok
         else
-          render json: { errors: ["No tasks to delete"] }, status: :unprocessable_entity
+          render json: { errors: [ "No tasks to delete" ] }, status: :unprocessable_entity
         end
       end
 
@@ -66,7 +66,7 @@ module Api
       def set_task
         @task = current_user.tasks.find(params[:id])
       rescue ActiveRecord::RecordNotFound
-        render json: { error: 'Task not found' }, status: :not_found
+        render json: { error: "Task not found" }, status: :not_found
       end
 
       def task_params

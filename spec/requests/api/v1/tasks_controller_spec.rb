@@ -120,7 +120,7 @@ RSpec.describe Api::V1::TasksController, type: :request do
 
     it 'deletes multiple tasks' do
       expect {
-        delete '/api/v1/tasks/bulk_destroy', params: { task_ids: [task1.id, task2.id] }, headers: headers
+        delete '/api/v1/tasks/bulk_destroy', params: { task_ids: [ task1.id, task2.id ] }, headers: headers
       }.to change { user.tasks.count }.by(-2)
 
       expect(response).to have_http_status(:ok)
@@ -128,7 +128,7 @@ RSpec.describe Api::V1::TasksController, type: :request do
     end
 
     it 'returns errors for non-existent task IDs' do
-      delete '/api/v1/tasks/bulk_destroy', params: { task_ids: [task1.id, 999] }, headers: headers
+      delete '/api/v1/tasks/bulk_destroy', params: { task_ids: [ task1.id, 999 ] }, headers: headers
       expect(response).to have_http_status(:unprocessable_entity)
       expect(json['errors']).to include('Tasks with IDs 999 not found')
       expect(Task.exists?(task1.id)).to be_truthy

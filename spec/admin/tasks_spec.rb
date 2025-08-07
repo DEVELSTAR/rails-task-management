@@ -23,21 +23,6 @@ RSpec.describe "Admin::Tasks", type: :feature do
     expect(page).to have_content(user.email)
   end
 
-#   it "creates a new task" do
-#     visit new_admin_task_path
-
-#     fill_in "Title", with: "New Admin Task"
-#     fill_in "Description", with: "Admin-created task"
-#     select user.email, from: "User"
-#     select "todo", from: "Status"
-#     fill_in "Due date", with: (Date.today + 5.days).strftime("%Y-%m-%d")
-
-#     click_button "Create Task"
-
-#     expect(page).to have_content("New Admin Task")
-#     expect(page).to have_content("todo")
-#   end
-
   it "edits a task" do
     visit edit_admin_task_path(task)
 

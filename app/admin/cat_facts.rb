@@ -1,7 +1,7 @@
 # app/admin/cat_facts.rb
 ActiveAdmin.register CatFact do
   menu priority: 100
-  actions :all, except: [:new, :edit]
+  actions :all, except: [ :new, :edit ]
 
   index do
     selectable_column
@@ -29,4 +29,3 @@ ActiveAdmin.register CatFact do
     link_to "Fetch New Cat Fact", fetch_and_save_admin_cat_facts_path, method: :post
   end
 end
-

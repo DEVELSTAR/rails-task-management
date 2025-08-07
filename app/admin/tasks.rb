@@ -24,11 +24,11 @@ ActiveAdmin.register Task do
       formatted_time_ago(col.created_at)
     end
     actions defaults: true do |task|
-      next_status = case task.status
-                    when "todo" then "in_progress"
-                    when "in_progress" then "done"
-                    else "todo"
-                    end
+    next_status = case task.status
+    when "todo" then "in_progress"
+    when "in_progress" then "done"
+    else "todo"
+    end
 
       link_to "Mark as #{next_status.titleize}", update_status_admin_task_path(task, status: next_status), method: :put
     end

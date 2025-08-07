@@ -21,13 +21,13 @@ class ApplicationController < ActionController::Base
       session[:admin_user_id] = admin_user.id
       redirect_to admin_root_path
     else
-      flash.now[:alert] = 'Invalid email or password'
+      flash.now[:alert] = "Invalid email or password"
       render :admin_login, status: :unprocessable_entity
     end
   end
 
   def destroy_admin_session
     session[:admin_user_id] = nil
-    redirect_to admin_login_path, notice: 'Logged out'
+    redirect_to admin_login_path, notice: "Logged out"
   end
 end

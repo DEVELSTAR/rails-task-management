@@ -11,12 +11,10 @@ module Api
         tasks = @user.tasks
 
         tasks = tasks.where(status: @params[:status]) if @params[:status].present?
-        
         if @params[:start_date].present? && @params[:end_date].present?
           tasks = tasks.where(due_date: @params[:start_date]..@params[:end_date])
         end
-        
-        tasks = tasks.where('title ILIKE ?', "%#{@params[:title]}%") if @params[:title].present?
+        tasks = tasks.where("title ILIKE ?", "%#{@params[:title]}%") if @params[:title].present?
 
         tasks
       end

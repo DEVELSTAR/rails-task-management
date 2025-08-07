@@ -1,10 +1,10 @@
 # app/services/cat_fact_fetcher_service.rb
-require 'net/http'
-require 'json'
+require "net/http"
+require "json"
 module Api
   module V1
     class CatFactFetcherService
-        CATFACT_API_URL = 'https://catfact.ninja/fact'.freeze
+        CATFACT_API_URL = "https://catfact.ninja/fact".freeze
 
         def self.call
             url = URI.parse(CATFACT_API_URL)
