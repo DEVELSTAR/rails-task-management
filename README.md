@@ -79,6 +79,8 @@
 ### 🧪 **Testing & Code Quality**
 
 * `simplecov` gem tracks test coverage
+* `rubocop` enforces code style and linting (Auto-correct available via `rubocop -A`)
+* `brakeman` scans for security vulnerabilities in the codebase
 
 ---
 
@@ -93,6 +95,8 @@
 ✅ DRY Code: Services, Helpers, Concerns
 ✅ Dashboard Stats & Live API
 ✅ Testing Coverage (SimpleCov)
+✅ Code Linting (Rubocop)
+✅ Security Audit (Brakeman)
 ```
 
 ---
