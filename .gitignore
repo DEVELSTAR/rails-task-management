@@ -9,27 +9,54 @@
 
 # Ignore all environment files.
 /.env*
+.env*
 
-# Ignore all logfiles and tempfiles.
+# Logs and temp files.
 /log/*
-/tmp/*
 !/log/.keep
+/tmp/*
 !/tmp/.keep
-
-# Ignore pidfiles, but keep the directory.
 /tmp/pids/*
-!/tmp/pids/
 !/tmp/pids/.keep
-
-# Ignore storage (uploaded files in development and any SQLite databases).
-/storage/*
-!/storage/.keep
 /tmp/storage/*
-!/tmp/storage/
 !/tmp/storage/.keep
 
-# Ignore master key for decrypting credentials and more.
-/config/master.key
-/.byebug_history/*
+# Uploaded files (ActiveStorage)
+/storage/*
+!/storage/.keep
 
-/public
+# Credentials and secrets.
+/config/master.key
+/config/credentials.yml.enc
+
+# Coverage report
+/coverage/
+
+# Debugger history
+.byebug_history
+
+# macOS system files
+.DS_Store
+
+# Node/Yarn (if using)
+/node_modules/
+/yarn.lock
+
+# Editor/IDE metadata
+.idea/
+.vscode/
+
+# Test artifacts
+/spec/examples.txt
+/spec/tmp/
+test/tmp/
+test/version_tmp/
+
+# Ignore uploads (if using CarrierWave, Shrine, etc.)
+public/uploads
+
+# Keep public folder (un-ignore it)
+/public/*
+!/public/.keep
+!/public/robots.txt
+
