@@ -52,7 +52,7 @@ end
 
 group :test do
   gem 'capybara'
-  gem 'selenium-webdriver' # or 'webdrivers' if needed
+  gem 'selenium-webdriver'
   gem 'simplecov', require: false
 end
 

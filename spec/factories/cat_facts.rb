@@ -1,6 +1,7 @@
+# spec/factories/cat_facts.rb
 FactoryBot.define do
   factory :cat_fact do
-    fact { "MyString" }
-    source { "MyString" }
+    fact { "Cats purr to communicate." }
+    source { "catfact.ninja" }
   end
 end

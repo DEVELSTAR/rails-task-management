@@ -141,6 +141,25 @@ RSpec.describe Api::V1::TasksController, type: :request do
     end
   end
 
+  describe 'DELETE /api/v1/tasks/delete_all' do
+    let!(:task1) { create(:task, user: user) }
+    let!(:task2) { create(:task, user: user) }
+
+    it 'deletes all tasks' do
+      delete '/api/v1/tasks/delete_all', headers: headers
+      expect(response).to have_http_status(:ok)
+      expect(json['message']).to eq('All tasks successfully deleted!')
+      expect(Task.count).to eq(0)
+    end
+
+    it 'returns error when no tasks exist' do
+      Task.destroy_all
+      delete '/api/v1/tasks/delete_all', headers: headers
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(json['errors']).to include('No tasks to delete')
+    end
+  end
+
   describe 'GET /api/v1/tasks/search' do
     let!(:task1) { create(:task, user: user, title: 'Project Task', status: 'todo', due_date: '2025-07-15') }
     let!(:task2) { create(:task, user: user, title: 'Other Task', status: 'done', due_date: '2025-08-01') }

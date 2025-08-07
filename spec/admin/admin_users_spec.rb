@@ -55,7 +55,7 @@ RSpec.describe "AdminUsers", type: :feature do
     expect(admin_user.authenticate("password")).to be_truthy
   end
 
-  it "deletes an admin user" do
+  it "deletes an admin user", js: true do
     visit admin_admin_users_path
     accept_confirm do
       click_link "Delete", href: admin_admin_user_path(admin_user)
