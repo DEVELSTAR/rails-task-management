@@ -33,6 +33,8 @@ Rails.application.routes.draw do
           post :fetch_verse
         end
       end
+
+      resources :courses, only: [ :index, :show, :create ]
     end
   end
 

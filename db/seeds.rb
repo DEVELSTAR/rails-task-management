@@ -50,7 +50,6 @@ require 'faker' # For generating random data
 #   status: :published,
 #   level: :beginner,
 #   language: "English",
-#   is_published: true
 # )
 
 # # Create Modules

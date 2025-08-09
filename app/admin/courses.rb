@@ -1,17 +1,24 @@
-# app/admin/courses.rb
 ActiveAdmin.register Course do
-  permit_params :title, :description, :duration, :slug, :image, :price, :status, :level, :language, :is_published,
-                course_modules_attributes: [:id, :title, :description, :position, :_destroy],
-                lessons_attributes: [
-                  :id, :title, :description, :position, :course_module_id, :_destroy,
-                  lesson_contents_attributes: [:id, :content_type, :position, :content_data, :_destroy],
-                  lesson_assessment_attributes: [
-                    :id, :title, :instructions, :_destroy,
-                    assessment_questions_attributes: [
-                      :id, :question_text, :options, :correct_option, :explanation, :_destroy
-                    ]
-                  ]
-                ]
+  permit_params :title, :description, :duration, :slug, :thumbnail, :price, :status, :level, :language,
+    course_modules_attributes: [
+      :id, :title, :description, :position, :_destroy,
+      lessons_attributes: [
+        :id, :title, :description, :position, :course_module_id, :_destroy,
+        lesson_contents_attributes: [:id, :content_type, :image, :video, :position, :content_data, :_destroy],
+        lesson_assessment_attributes: [
+          :id, :title, :instructions, :_destroy,
+          assessment_questions_attributes: [
+            :id, :question_text, { options: [] }, :correct_option, :explanation, :_destroy
+          ]
+        ]
+      ]
+    ],
+    final_assessment_attributes: [
+      :id, :title, :instructions, :_destroy,
+      assessment_questions_attributes: [
+        :id, :question_text, { options: [] }, :correct_option, :explanation, :_destroy
+      ]
+    ]
 
   index do
     selectable_column
@@ -22,7 +29,7 @@ ActiveAdmin.register Course do
     column :slug
     column :status
     column :level
-    column :is_published
+    column :language
     actions
   end
 
@@ -34,59 +41,144 @@ ActiveAdmin.register Course do
       f.input :description
       f.input :duration
       f.input :slug
-      f.input :image
+      f.input :thumbnail, as: :file
       f.input :price
-      f.input :status
-      f.input :level
+      f.input :status, as: :select, collection: Course.statuses.keys
+      f.input :level, as: :select, collection: Course.levels.keys
       f.input :language
-      f.input :is_published
     end
 
-    f.has_many :course_modules, allow_destroy: true, heading: "Modules", new_record: true do |mod_f|
-      mod_f.input :title
-      mod_f.input :description
-      mod_f.input :position
-    end
+    f.inputs "Modules" do
+      f.has_many :course_modules, allow_destroy: true, new_record: "Add Module" do |mod_f|
+        mod_f.input :title
+        mod_f.input :description
+        mod_f.input :position
 
-    f.has_many :lessons, allow_destroy: true, heading: "Lessons", new_record: true do |lesson_f|
-      lesson_f.input :title
-      lesson_f.input :description
-      lesson_f.input :position
-      lesson_f.input :course_module
+        mod_f.has_many :lessons, allow_destroy: true, new_record: "Add Lesson" do |lesson_f|
+          lesson_f.input :title
+          lesson_f.input :description
+          lesson_f.input :position
 
-      lesson_f.has_many :lesson_contents, allow_destroy: true, heading: "Contents", new_record: true do |content_f|
-        content_f.input :content_type, as: :select, collection: LessonContent.content_types.keys
-        content_f.input :position
-        content_f.input :content_data, as: :text
-      end
+          lesson_f.has_many :lesson_contents, allow_destroy: true, new_record: "Add Content" do |content_f|
+            content_f.input :content_type, as: :select, collection: LessonContent.content_types.keys
+            content_f.input :content_data
+            content_f.input :image, as: :file
+            content_f.input :video, as: :file
+            content_f.input :content_data
+            content_f.input :position
+          end
 
-      # lesson_f.has_one :lesson_assessment, allow_destroy: true, heading: "Assessment", new_record: true do |assess_f|
-      #   assess_f.input :title
-      #   assess_f.input :instructions
-
-      #   assess_f.has_many :assessment_questions, allow_destroy: true, heading: "Questions", new_record: true do |q_f|
-      #     q_f.input :question_text
-      #     q_f.input :options, as: :tags
-      #     q_f.input :correct_option
-      #     q_f.input :explanation
-      #   end
-      # end
-
-      lesson_f.has_many :lesson_assessment, allow_destroy: true, heading: "Assessment", new_record: true do |assess_f|
-        if lesson_f.object.lesson_assessment.present?
-          assess_f.input :title
-          assess_f.input :instructions
-
-          assess_f.has_many :assessment_questions, allow_destroy: true, heading: "Questions", new_record: true do |q_f|
-            q_f.input :question_text
-            q_f.input :options, as: :tags
-            q_f.input :correct_option
-            q_f.input :explanation
+          lesson_f.has_many :lesson_assessment, allow_destroy: true, new_record: "Add Assessment" do |assess_f|
+            assess_f.input :title
+            assess_f.input :instructions
+            assess_f.has_many :assessment_questions, allow_destroy: true, new_record: "Add Question" do |q_f|
+              q_f.input :question_text
+              q_f.input :options
+              q_f.input :correct_option
+              q_f.input :explanation
+            end
           end
         end
       end
     end
 
+    f.inputs "Final Assessment" do
+      f.has_many :final_assessment, allow_destroy: true, new_record: "Add Final Assessment" do |final_f|
+        final_f.input :title
+        final_f.input :instructions
+        final_f.has_many :assessment_questions, allow_destroy: true, new_record: "Add Question" do |q_f|
+          q_f.input :question_text
+          q_f.input :options
+          q_f.input :correct_option
+          q_f.input :explanation
+        end
+      end
+    end
+
     f.actions
+  end
+
+  show do
+    attributes_table do
+      row :title
+      row :description
+      row :duration
+      row :slug
+      row :price
+      row :status
+      row :level
+      row :language
+      row :thumbnail do |course|
+        if course.thumbnail.attached?
+          image_tag course.thumbnail, style: "max-width: 300px;"
+        else
+          "No thumbnail"
+        end
+      end
+    end
+
+    panel "Modules & Lessons" do
+      course.course_modules.order(:position).each do |mod|
+        panel "Module: #{mod.title} (Position: #{mod.position})" do
+          para mod.description
+          mod.lessons.order(:position).each do |lesson|
+            panel "Lesson: #{lesson.title} (Position: #{lesson.position})" do
+              para lesson.description
+
+              if lesson.lesson_contents.any?
+                table_for lesson.lesson_contents.order(:position) do
+                  column("Content Type") { |c| c.content_type }
+                  column("Data") { |c| c.content_data }
+                  column("Image") do |c|
+                    if c.image.attached?
+                      image_tag url_for(c.image), size: "100x100"
+                    else
+                      status_tag("No Image", :warning)
+                    end
+                  end
+                  column("Video") do |c|
+                    if c.video.attached?
+                      link_to "View Video", url_for(c.video), target: "_blank"
+                    else
+                      status_tag("No Video", :warning)
+                    end
+                  end
+                  column("Position") { |c| c.position }
+                end
+              end
+
+
+              if lesson.lesson_assessment
+                panel "Lesson Assessment: #{lesson.lesson_assessment.title}" do
+                  para lesson.lesson_assessment.instructions
+                  if lesson.lesson_assessment.assessment_questions.any?
+                    table_for lesson.lesson_assessment.assessment_questions do
+                      column :question_text
+                      column :options
+                      column :correct_option
+                      column :explanation
+                    end
+                  end
+                end
+              end
+            end
+          end
+        end
+      end
+    end
+
+    if course.final_assessment
+      panel "Final Assessment: #{course.final_assessment.title}" do
+        para course.final_assessment.instructions
+        if course.final_assessment.assessment_questions.any?
+          table_for course.final_assessment.assessment_questions do
+            column :question_text
+            column :options
+            column :correct_option
+            column :explanation
+          end
+        end
+      end
+    end
   end
 end

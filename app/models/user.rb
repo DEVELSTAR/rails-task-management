@@ -10,7 +10,7 @@ class User < ApplicationRecord
   has_many :user_assessment_results, dependent: :destroy
   has_many :user_package_purchases, dependent: :destroy
   has_many :packages, through: :user_package_purchases
-  
+
   def self.ransackable_associations(auth_object = nil)
     ["tasks", "user_lesson_statuses", "lessons", "user_course_enrollments", "enrolled_courses", "user_assessment_results", "user_package_purchases", "packages"]
   end

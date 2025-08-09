@@ -1,9 +1,9 @@
 class Lesson < ApplicationRecord
-  belongs_to :course
   belongs_to :course_module, optional: true
 
   has_many :lesson_contents, -> { order(:position) }, dependent: :destroy
-  has_one :lesson_assessment, dependent: :destroy
+  has_one :lesson_assessment, -> { where(assessable_type: 'Lesson') },
+          class_name: 'Assessment', as: :assessable, dependent: :destroy
   has_many :user_lesson_statuses, dependent: :destroy
   has_many :users, through: :user_lesson_statuses
 
@@ -12,6 +12,6 @@ class Lesson < ApplicationRecord
   validates :title, :position, presence: true
 
   def self.ransackable_associations(auth_object = nil)
-    ["course", "course_module", "lesson_assessment", "user_lesson_statuses", "users"]
+    ["course_module", "lesson_assessment", "user_lesson_statuses", "users"]
   end
 end

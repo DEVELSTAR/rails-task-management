@@ -1,7 +1,6 @@
 class UserAssessmentResult < ApplicationRecord
   belongs_to :user
-  belongs_to :lesson_assessment, optional: true
-  belongs_to :final_assessment, optional: true
+  belongs_to :assessment
 
   validates :score, :attempted_at, presence: true
 

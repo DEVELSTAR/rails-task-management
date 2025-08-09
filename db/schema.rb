@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_08_053723) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_09_100850) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -28,6 +28,34 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_08_053723) do
     t.index ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource"
   end
 
+  create_table "active_storage_attachments", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "record_type", null: false
+    t.bigint "record_id", null: false
+    t.bigint "blob_id", null: false
+    t.datetime "created_at", null: false
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", force: :cascade do |t|
+    t.string "key", null: false
+    t.string "filename", null: false
+    t.string "content_type"
+    t.text "metadata"
+    t.string "service_name", null: false
+    t.bigint "byte_size", null: false
+    t.string "checksum"
+    t.datetime "created_at", null: false
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "active_storage_variant_records", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.string "variation_digest", null: false
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
   create_table "admin_users", force: :cascade do |t|
     t.string "email", null: false
     t.string "password_digest", null: false
@@ -37,16 +65,24 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_08_053723) do
   end
 
   create_table "assessment_questions", force: :cascade do |t|
-    t.bigint "lesson_assessment_id", null: false
+    t.bigint "assessment_id", null: false
     t.text "question_text"
     t.jsonb "options"
     t.string "correct_option"
     t.text "explanation"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "final_assessment_id"
-    t.index ["final_assessment_id"], name: "index_assessment_questions_on_final_assessment_id"
-    t.index ["lesson_assessment_id"], name: "index_assessment_questions_on_lesson_assessment_id"
+    t.index ["assessment_id"], name: "index_assessment_questions_on_assessment_id"
+  end
+
+  create_table "assessments", force: :cascade do |t|
+    t.string "assessable_type", null: false
+    t.bigint "assessable_id", null: false
+    t.string "title"
+    t.text "instructions"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["assessable_type", "assessable_id"], name: "index_assessments_on_assessable"
   end
 
   create_table "cat_facts", force: :cascade do |t|
@@ -80,32 +116,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_08_053723) do
     t.text "description"
     t.integer "duration"
     t.string "slug"
-    t.string "image"
     t.decimal "price"
     t.integer "status", default: 0
     t.string "language"
     t.integer "level", default: 0
-    t.boolean "is_published"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-  end
-
-  create_table "final_assessments", force: :cascade do |t|
-    t.bigint "course_id", null: false
-    t.string "title"
-    t.text "instructions"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["course_id"], name: "index_final_assessments_on_course_id"
-  end
-
-  create_table "lesson_assessments", force: :cascade do |t|
-    t.bigint "lesson_id", null: false
-    t.string "title"
-    t.text "instructions"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["lesson_id"], name: "index_lesson_assessments_on_lesson_id"
   end
 
   create_table "lesson_contents", force: :cascade do |t|
@@ -122,11 +138,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_08_053723) do
     t.string "title"
     t.text "description"
     t.integer "position"
-    t.bigint "course_id", null: false
     t.bigint "course_module_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["course_id"], name: "index_lessons_on_course_id"
     t.index ["course_module_id"], name: "index_lessons_on_course_module_id"
   end
 
@@ -136,7 +150,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_08_053723) do
     t.decimal "price"
     t.decimal "discount"
     t.integer "duration"
-    t.string "image"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -164,16 +177,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_08_053723) do
 
   create_table "user_assessment_results", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.bigint "lesson_assessment_id", null: false
-    t.bigint "final_assessment_id", null: false
+    t.bigint "assessment_id", null: false
     t.integer "score", default: 0
     t.boolean "passed"
     t.datetime "attempted_at"
     t.jsonb "answers"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["final_assessment_id"], name: "index_user_assessment_results_on_final_assessment_id"
-    t.index ["lesson_assessment_id"], name: "index_user_assessment_results_on_lesson_assessment_id"
+    t.index ["assessment_id"], name: "index_user_assessment_results_on_assessment_id"
     t.index ["user_id"], name: "index_user_assessment_results_on_user_id"
   end
 
@@ -222,19 +233,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_08_053723) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
-  add_foreign_key "assessment_questions", "final_assessments"
-  add_foreign_key "assessment_questions", "lesson_assessments"
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "assessment_questions", "assessments"
   add_foreign_key "course_modules", "courses"
   add_foreign_key "course_packages", "courses"
   add_foreign_key "course_packages", "packages"
-  add_foreign_key "final_assessments", "courses"
-  add_foreign_key "lesson_assessments", "lessons"
   add_foreign_key "lesson_contents", "lessons"
   add_foreign_key "lessons", "course_modules"
-  add_foreign_key "lessons", "courses"
   add_foreign_key "tasks", "users"
-  add_foreign_key "user_assessment_results", "final_assessments"
-  add_foreign_key "user_assessment_results", "lesson_assessments"
+  add_foreign_key "user_assessment_results", "assessments"
   add_foreign_key "user_assessment_results", "users"
   add_foreign_key "user_course_enrollments", "courses"
   add_foreign_key "user_course_enrollments", "users"

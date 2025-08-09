@@ -9,6 +9,5 @@ FactoryBot.define do
     status { 1 }
     language { "MyString" }
     level { 1 }
-    is_published { false }
   end
 end
