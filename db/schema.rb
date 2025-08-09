@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_09_100850) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_09_190024) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -54,6 +54,19 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_09_100850) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "addresses", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "line1"
+    t.string "line2"
+    t.string "city"
+    t.string "state"
+    t.string "zip"
+    t.string "country"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_addresses_on_user_id"
   end
 
   create_table "admin_users", force: :cascade do |t|
@@ -154,6 +167,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_09_100850) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "profiles", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "name"
+    t.text "bio"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_profiles_on_user_id"
+  end
+
   create_table "quran_verses", force: :cascade do |t|
     t.string "surah_name"
     t.string "verse_number"
@@ -235,12 +257,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_09_100850) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "addresses", "users"
   add_foreign_key "assessment_questions", "assessments"
   add_foreign_key "course_modules", "courses"
   add_foreign_key "course_packages", "courses"
   add_foreign_key "course_packages", "packages"
   add_foreign_key "lesson_contents", "lessons"
   add_foreign_key "lessons", "course_modules"
+  add_foreign_key "profiles", "users"
   add_foreign_key "tasks", "users"
   add_foreign_key "user_assessment_results", "assessments"
   add_foreign_key "user_assessment_results", "users"

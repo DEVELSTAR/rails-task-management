@@ -35,6 +35,8 @@ Rails.application.routes.draw do
       end
 
       resources :courses, only: [ :index, :show, :create ]
+      resource :profile, only: [:show, :update]
+      resources :addresses, only: [:index, :create, :update, :destroy]
     end
   end
 

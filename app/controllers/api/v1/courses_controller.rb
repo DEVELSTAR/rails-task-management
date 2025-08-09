@@ -13,7 +13,8 @@ module Api
       end
 
       def show
-        render json: CourseSerializer.new(@course).as_json
+        course = Course.find(params[:id])
+        render json: CourseSerializer.new(course, { params: { host: request.base_url } }).serializable_hash
       end
 
       def create
