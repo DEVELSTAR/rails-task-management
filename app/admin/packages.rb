@@ -12,7 +12,7 @@ ActiveAdmin.register Package do
       f.input :price
       f.input :discount
       f.input :duration, hint: "Duration in days"
-      f.input :thumbnail, as: :file, hint: f.object.thumbnail.attached? ? image_tag(f.object.thumbnail, style: 'max-width: 200px;') : content_tag(:span, "No thumbnail yet")
+      f.input :thumbnail, as: :file, hint: f.object.thumbnail.attached? ? image_tag(f.object.thumbnail, style: "max-width: 200px;") : content_tag(:span, "No thumbnail yet")
     end
 
     f.inputs "Courses" do

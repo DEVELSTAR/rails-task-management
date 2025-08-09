@@ -2,8 +2,8 @@ class Lesson < ApplicationRecord
   belongs_to :course_module, optional: true
 
   has_many :lesson_contents, -> { order(:position) }, dependent: :destroy
-  has_one :lesson_assessment, -> { where(assessable_type: 'Lesson') },
-          class_name: 'Assessment', as: :assessable, dependent: :destroy
+  has_one :lesson_assessment, -> { where(assessable_type: "Lesson") },
+          class_name: "Assessment", as: :assessable, dependent: :destroy
   has_many :user_lesson_statuses, dependent: :destroy
   has_many :users, through: :user_lesson_statuses
 

@@ -8,7 +8,7 @@ module Api
           course_modules: { lessons: [:lesson_contents, { lesson_assessment: :assessment_questions }] },
           final_assessment: :assessment_questions
         )
-        
+
         render json: courses.map { |course| CourseSerializer.new(course).as_json }
       end
 
