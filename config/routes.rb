@@ -34,7 +34,25 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :courses, only: [ :index, :show, :create ]
+      resources :courses, only: [ :index, :show, :create ] do
+        member do
+          post "enroll", to: "user_course_enrollments#create"
+          get "progress", to: "user_course_enrollments#show"
+        end
+      end
+
+      resources :lessons do
+        member do
+          put "status", to: "user_lesson_statuses#update"
+        end
+      end
+
+      resources :assessments do
+        member do
+          post "submit", to: "user_assessment_results#create"
+        end
+      end
+
       resource :profile, only: [:show, :update]
       resources :addresses, only: [:index, :create, :update, :destroy]
     end

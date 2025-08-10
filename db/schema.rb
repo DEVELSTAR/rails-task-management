@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_09_190024) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_10_074039) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -77,11 +77,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_09_190024) do
     t.index ["email"], name: "index_admin_users_on_email", unique: true
   end
 
+  create_table "assessment_answers", force: :cascade do |t|
+    t.bigint "assessment_question_id", null: false
+    t.text "answer_text", null: false
+    t.boolean "is_correct", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["assessment_question_id"], name: "index_assessment_answers_on_assessment_question_id"
+  end
+
   create_table "assessment_questions", force: :cascade do |t|
     t.bigint "assessment_id", null: false
     t.text "question_text"
-    t.jsonb "options"
-    t.string "correct_option"
     t.text "explanation"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -258,6 +265,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_09_190024) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "addresses", "users"
+  add_foreign_key "assessment_answers", "assessment_questions"
   add_foreign_key "assessment_questions", "assessments"
   add_foreign_key "course_modules", "courses"
   add_foreign_key "course_packages", "courses"

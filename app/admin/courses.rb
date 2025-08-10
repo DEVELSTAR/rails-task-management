@@ -8,7 +8,8 @@ ActiveAdmin.register Course do
         lesson_assessment_attributes: [
           :id, :title, :instructions, :_destroy,
           assessment_questions_attributes: [
-            :id, :question_text, { options: [] }, :correct_option, :explanation, :_destroy
+            :id, :question_text, :explanation, :_destroy,
+            assessment_answers_attributes: [:id, :answer_text, :is_correct, :_destroy]
           ]
         ]
       ]
@@ -73,9 +74,12 @@ ActiveAdmin.register Course do
             assess_f.input :instructions
             assess_f.has_many :assessment_questions, allow_destroy: true, new_record: "Add Question" do |q_f|
               q_f.input :question_text
-              q_f.input :options
-              q_f.input :correct_option
               q_f.input :explanation
+              q_f.has_many :assessment_answers, allow_destroy: true, new_record: "Add Answers" do |a_f|
+                a_f.input :answer_text
+                a_f.input :options
+                a_f.input :is_correct
+              end
             end
           end
         end
@@ -88,9 +92,12 @@ ActiveAdmin.register Course do
         final_f.input :instructions
         final_f.has_many :assessment_questions, allow_destroy: true, new_record: "Add Question" do |q_f|
           q_f.input :question_text
-          q_f.input :options
-          q_f.input :correct_option
           q_f.input :explanation
+          q_f.has_many :assessment_answers, allow_destroy: true, new_record: "Add Answers" do |a_f|
+            a_f.input :answer_text
+            a_f.input :options
+            a_f.input :is_correct
+          end
         end
       end
     end
@@ -132,21 +139,16 @@ ActiveAdmin.register Course do
                   column("Image") do |c|
                     if c.image.attached?
                       image_tag url_for(c.image), size: "100x100"
-                    else
-                      status_tag("No Image", :warning)
                     end
                   end
                   column("Video") do |c|
                     if c.video.attached?
                       link_to "View Video", url_for(c.video), target: "_blank"
-                    else
-                      status_tag("No Video", :warning)
                     end
                   end
                   column("Position") { |c| c.position }
                 end
               end
-
 
               if lesson.lesson_assessment
                 panel "Lesson Assessment: #{lesson.lesson_assessment.title}" do
@@ -154,8 +156,6 @@ ActiveAdmin.register Course do
                   if lesson.lesson_assessment.assessment_questions.any?
                     table_for lesson.lesson_assessment.assessment_questions do
                       column :question_text
-                      column :options
-                      column :correct_option
                       column :explanation
                     end
                   end
@@ -173,8 +173,6 @@ ActiveAdmin.register Course do
         if course.final_assessment.assessment_questions.any?
           table_for course.final_assessment.assessment_questions do
             column :question_text
-            column :options
-            column :correct_option
             column :explanation
           end
         end

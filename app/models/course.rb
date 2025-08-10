@@ -1,5 +1,6 @@
 class Course < ApplicationRecord
   has_many :course_modules, dependent: :destroy
+  has_many :lessons, through: :course_modules
   has_many :user_course_enrollments, dependent: :destroy
   has_many :enrolled_users, through: :user_course_enrollments, source: :user
   has_one :final_assessment, -> { where(assessable_type: "Course") },
@@ -15,7 +16,7 @@ class Course < ApplicationRecord
   validates :slug, uniqueness: true
 
   def self.ransackable_associations(auth_object = nil)
-    ["course_modules", "enrolled_users", "user_course_enrollments", "final_assessment"]
+    ["course_modules", "enrolled_users", "user_course_enrollments", "final_assessment", "lessons"]
   end
 
   def self.ransackable_attributes(auth_object = nil)

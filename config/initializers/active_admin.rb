@@ -138,7 +138,7 @@ ActiveAdmin.setup do |config|
   #
   # Default:
   # config.root_to = 'dashboard#index'
-  config.root_to = "tasks#index"
+  config.root_to = "dashboard#index"
 
   # == Admin Comments
   #

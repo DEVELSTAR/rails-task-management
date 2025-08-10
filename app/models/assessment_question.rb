@@ -1,9 +1,16 @@
+# app/models/assessment_question.rb
 class AssessmentQuestion < ApplicationRecord
   belongs_to :assessment
+  has_many :assessment_answers, dependent: :destroy
+  accepts_nested_attributes_for :assessment_answers, allow_destroy: true
 
-  validates :question_text, :options, :correct_option, presence: true
+  validates :question_text, presence: true
 
   def self.ransackable_associations(auth_object = nil)
-    ["lesson_assessment", "final_assessment"]
+    ["assessment", "assessment_answers"]
+  end
+
+  def correct_answer
+    assessment_answers.find_by(is_correct: true)
   end
 end

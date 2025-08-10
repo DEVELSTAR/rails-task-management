@@ -46,7 +46,8 @@ module Api
               lesson_assessment_attributes: [
                 :id, :title, :instructions, :_destroy,
                 assessment_questions_attributes: [
-                  :id, :question_text, { options: [] }, :correct_option, :explanation, :_destroy
+                  :id, :question_text, :explanation, :_destroy,
+                  assessment_answers_attributes: [:id, :answer_text, :is_correct, :_destroy]
                 ]
               ]
             ]
@@ -54,7 +55,8 @@ module Api
           final_assessment_attributes: [
             :id, :title, :instructions, :_destroy,
             assessment_questions_attributes: [
-              :id, :question_text, { options: [] }, :correct_option, :explanation, :_destroy
+              :id, :question_text, :explanation, :_destroy,
+              assessment_answers_attributes: [:id, :answer_text, :is_correct, :_destroy]
             ]
           ]
         )

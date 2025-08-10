@@ -40,9 +40,14 @@ class CourseSerializer < ApplicationSerializer
                 {
                   id: q.id,
                   question_text: q.question_text,
-                  options: q.options,
-                  correct_option: q.correct_option,
-                  explanation: q.explanation
+                  explanation: q.explanation,
+                  assessment_answers: q.assessment_answers.map do |a|
+                    {
+                      id: a.id,
+                      answer_text: a.answer_text,
+                      is_correct: a.is_correct
+                    }
+                  end
                 }
               end
             }
@@ -61,9 +66,14 @@ class CourseSerializer < ApplicationSerializer
         {
           id: q.id,
           question_text: q.question_text,
-          options: q.options,
-          correct_option: q.correct_option,
-          explanation: q.explanation
+          explanation: q.explanation,
+          assessment_answers: q.assessment_answers.map do |a|
+            {
+              id: a.id,
+              answer_text: a.answer_text,
+              is_correct: a.is_correct
+            }
+          end
         }
       end
     }
