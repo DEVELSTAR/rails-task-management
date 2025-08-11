@@ -3,11 +3,12 @@ module Api
     class UserLessonStatusesController < ApplicationController
       def update
         lesson = Lesson.find(params[:id])
-        course = lesson.course_module.course
+        course = lesson.course
         enrollment = current_user.user_course_enrollments.find_by(course: course)
 
         if enrollment
           user_lesson_status = current_user.user_lesson_statuses.find_or_initialize_by(lesson: lesson)
+
           user_lesson_status.status = params[:status]
 
           if user_lesson_status.save

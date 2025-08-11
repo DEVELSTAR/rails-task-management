@@ -2,6 +2,7 @@ module Api
   module V1
     class UserCourseEnrollmentsController < ApplicationController
       before_action :authenticate_user
+      before_action :set_enrollment, only: [:destroy]
 
       def index
         enrollments = current_user.user_course_enrollments.includes(:course)
@@ -21,14 +22,31 @@ module Api
         render json: data
       end
 
+      def destroy
+        if params[:reset_progress] == "true"
+          reset_progress(@enrollment)
+        end
+
+        if @enrollment.destroy
+          render json: { message: "Unenrolled successfully#{' and progress reset' if params[:reset_progress] == 'true'}." }
+        else
+          render json: { error: "Unable to unenroll." }, status: :unprocessable_entity
+        end
+      end
+
       def create
         course = Course.find(params[:course_id])
-        enrollment = current_user.user_course_enrollments.find_or_initialize_by(course: course)
+        if current_user.user_course_enrollments.find_by(course: course)
+          return render json: { message: "You are already enrolled in this course!" }, status: :ok
+        end
+
+        enrollment = current_user.user_course_enrollments.new(course: course)
 
         enrollment.status = :in_progress
         enrollment.progress = 0
 
         if enrollment.save
+          create_notification(current_user, course, :enrolled)
           render json: {
             course_id: course.id,
             status: enrollment.status,
@@ -86,6 +104,28 @@ module Api
           final_assessment_score: final_result&.score,
           final_assessment_attempted_at: final_result&.attempted_at
         }
+      end
+
+      private
+
+      def set_enrollment
+        @enrollment = current_user.user_course_enrollments.find_by(course_id: params[:id])
+        render json: { error: "Enrollment not found." }, status: :not_found unless @enrollment
+      end
+
+      def reset_progress(enrollment)
+        course = enrollment.course
+
+        # Wipe lesson progress
+        lesson_ids = course.course_modules.joins(:lessons).pluck("lessons.id")
+        current_user.user_lesson_statuses.where(lesson_id: lesson_ids).delete_all
+
+        # Wipe assessment results
+        assessment_ids = Assessment
+          .where(assessable_type: "Lesson", assessable_id: lesson_ids)
+          .pluck(:id)
+        assessment_ids << course.final_assessment_id if course.final_assessment_id.present?
+        current_user.user_assessment_results.where(assessment_id: assessment_ids).delete_all
       end
     end
   end

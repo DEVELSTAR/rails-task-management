@@ -55,6 +55,7 @@ Rails.application.routes.draw do
 
       resource :profile, only: [:show, :update]
       resources :addresses, only: [:index, :create, :update, :destroy]
+      resources :user_course_enrollments, only: [:index, :destroy]
     end
   end
 

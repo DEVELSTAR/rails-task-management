@@ -66,3 +66,4 @@ gem "country_select", "~> 8.0"
 gem "jsonapi-serializer"
 gem "chartkick"
 gem "groupdate"
+gem 'deep_cloneable'

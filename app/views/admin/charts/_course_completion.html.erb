@@ -1,0 +1,3 @@
+<%= pie_chart UserCourseEnrollment.group(:status).count,
+              height: "300px",
+              library: {title: {text: "Course Completion Status"}} %>
