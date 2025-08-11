@@ -37,4 +37,3 @@ ActiveAdmin.register Notification do
   filter :notification_type
   filter :read
 end
-
