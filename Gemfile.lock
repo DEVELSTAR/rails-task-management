@@ -124,8 +124,6 @@ GEM
     debug (1.11.0)
       irb (~> 1.10)
       reline (>= 0.3.8)
-    deep_cloneable (3.2.1)
-      activerecord (>= 3.1.0, < 9)
     diff-lcs (1.6.2)
     docile (1.4.1)
     dotenv (3.1.8)
@@ -476,7 +474,6 @@ DEPENDENCIES
   chartkick
   country_select (~> 8.0)
   debug
-  deep_cloneable
   factory_bot_rails
   faker
   font-awesome-sass (~> 6.5.2)

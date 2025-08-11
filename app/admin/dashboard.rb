@@ -31,8 +31,8 @@ ActiveAdmin.register_page "Dashboard" do
           table_for User.limit(10) do
             column(:email)
             column("Enrolled Courses") { |u| u.user_course_enrollments.count }
-            column("Completed Courses") { |u| u.user_course_enrollments.where(status: 'completed').count }
-            column("In Progress") { |u| u.user_course_enrollments.where(status: 'in_progress').count }
+            column("Completed Courses") { |u| u.user_course_enrollments.where(status: "completed").count }
+            column("In Progress") { |u| u.user_course_enrollments.where(status: "in_progress").count }
             column("Courses & Progress") do |u|
               u.user_course_enrollments.includes(:course).map do |enrollment|
                 "#{enrollment.course.title}: #{enrollment.progress || 0}%"

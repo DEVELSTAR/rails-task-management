@@ -109,7 +109,7 @@ ActiveAdmin.register Course do
   action_item :clone, only: :show do
     link_to "Clone Course", clone_admin_course_path(resource), method: :post
   end
-  
+
   form do |f|
     f.semantic_errors
 
