@@ -17,7 +17,8 @@ ActiveAdmin.register Course do
     final_assessment_attributes: [
       :id, :title, :instructions, :_destroy,
       assessment_questions_attributes: [
-        :id, :question_text, { options: [] }, :correct_option, :explanation, :_destroy
+        :id, :question_text, :explanation, :_destroy,
+        assessment_answers_attributes: [:id, :answer_text, :is_correct, :_destroy]
       ]
     ]
 
@@ -34,6 +35,81 @@ ActiveAdmin.register Course do
     actions
   end
 
+  member_action :clone, method: :post do
+    original = Course.find(params[:id])
+    cloned = original.dup
+    random_number = rand(1000..9999)
+    cloned.title = "#{original.title}-Copy (#{random_number})"
+    cloned.slug  = "#{original.slug}-Copy #{random_number}"
+    cloned.save!
+
+    # Clone course modules
+    original.course_modules.each do |mod|
+      cloned_mod = mod.dup
+      cloned_mod.course_id = cloned.id
+      cloned_mod.save!
+
+      # Clone lessons
+      mod.lessons.each do |lesson|
+        cloned_lesson = lesson.dup
+        cloned_lesson.course_module_id = cloned_mod.id
+        cloned_lesson.save!
+
+        # Clone lesson contents
+        lesson.lesson_contents.each do |content|
+          cloned_content = content.dup
+          cloned_content.lesson_id = cloned_lesson.id
+          cloned_content.save!
+        end
+
+        # Clone lesson assessment
+        if lesson.lesson_assessment
+          cloned_final = lesson.lesson_assessment.dup
+          cloned_final.assessable = cloned
+          cloned_final.save!
+
+          lesson.lesson_assessment.assessment_questions.each do |q|
+            cloned_q = q.dup
+            cloned_q.assessment = cloned_final
+            cloned_q.save!
+
+            q.assessment_answers.each do |a|
+              cloned_a = a.dup
+              cloned_a.assessment_question = cloned_q
+              cloned_a.save!
+            end
+          end
+        end
+      end
+    end
+
+    # Clone final assessment
+    if original.final_assessment
+      cloned_final = original.final_assessment.dup
+      # cloned_final.course_id = cloned.id
+      cloned_final.save!
+
+      original.final_assessment.assessment_questions.each do |q|
+        cloned_q = q.dup
+        cloned_q.assessment_id = cloned_final.id
+        cloned_q.save!
+
+        q.assessment_answers.each do |a|
+          cloned_a = a.dup
+          cloned_a.assessment_question_id = cloned_q.id
+          cloned_a.save!
+        end
+      end
+    end
+
+    redirect_to admin_course_path(cloned), notice: "Course cloned successfully."
+  end
+
+  # Add button to UI
+  action_item :clone, only: :show do
+    link_to "Clone Course", clone_admin_course_path(resource), method: :post
+  end
+  
   form do |f|
     f.semantic_errors
 
@@ -77,7 +153,6 @@ ActiveAdmin.register Course do
               q_f.input :explanation
               q_f.has_many :assessment_answers, allow_destroy: true, new_record: "Add Answers" do |a_f|
                 a_f.input :answer_text
-                a_f.input :options
                 a_f.input :is_correct
               end
             end
@@ -95,7 +170,6 @@ ActiveAdmin.register Course do
           q_f.input :explanation
           q_f.has_many :assessment_answers, allow_destroy: true, new_record: "Add Answers" do |a_f|
             a_f.input :answer_text
-            a_f.input :options
             a_f.input :is_correct
           end
         end
