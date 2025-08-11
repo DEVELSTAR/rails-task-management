@@ -1,5 +1,5 @@
 <%= column_chart Course.joins(:user_course_enrollments)
                        .group(:title)
-                       .count,
+                       .size,
                  height: "300px",
                  library: {title: {text: "Enrollments per Course"}} %>

@@ -2,10 +2,12 @@
 ActiveAdmin.register Notification do
   actions :all, except: [:new, :show, :edit]
 
+  includes :user, :course
+
   index do
     selectable_column
     id_column
-    column :description
+    column(:description, sortable: false)
     column :user
     column :course
     column :notification_type
@@ -35,3 +37,4 @@ ActiveAdmin.register Notification do
   filter :notification_type
   filter :read
 end
+

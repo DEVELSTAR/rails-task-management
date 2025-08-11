@@ -1,7 +1,6 @@
 class UserCourseEnrollment < ApplicationRecord
-  belongs_to :user
-  belongs_to :course
-
+  belongs_to :course, counter_cache: true
+  belongs_to :user, counter_cache: true
   enum :status, {
     in_progress: 0,
     completed: 1,

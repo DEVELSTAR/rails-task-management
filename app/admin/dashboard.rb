@@ -5,11 +5,12 @@ ActiveAdmin.register_page "Dashboard" do
     columns do
       column do
         panel "Courses Overview" do
-          table_for Course.all.limit(10).order("created_at desc") do
+          table_for Course.order(created_at: :desc)
+                          .limit(10) do
             column("Name") { |course| link_to course.title, admin_course_path(course) }
             column("Price") { |course| number_to_currency(course.price) }
-            column("Modules") { |course| course.course_modules.count }
-            column("Students Enrolled") { |course| course.user_course_enrollments.count }
+            column("Modules") { |course| course.course_modules_count }
+            column("Students Enrolled") { |course| course.user_course_enrollments_count }
           end
           div { link_to "View All Courses", admin_courses_path }
         end
@@ -28,13 +29,17 @@ ActiveAdmin.register_page "Dashboard" do
     columns do
       column do
         panel "Users & Enrollments" do
-          table_for User.limit(10) do
+          table_for User.includes(user_course_enrollments: :course).limit(10) do
             column(:email)
-            column("Enrolled Courses") { |u| u.user_course_enrollments.count }
-            column("Completed Courses") { |u| u.user_course_enrollments.where(status: "completed").count }
-            column("In Progress") { |u| u.user_course_enrollments.where(status: "in_progress").count }
+            column("Enrolled Courses") { |u| u.user_course_enrollments_count }
+            column("Completed Courses") do |u|
+              u.user_course_enrollments.select { |e| e.status == "completed" }.size
+            end
+            column("In Progress") do |u|
+              u.user_course_enrollments.select { |e| e.status == "in_progress" }.size
+            end
             column("Courses & Progress") do |u|
-              u.user_course_enrollments.includes(:course).map do |enrollment|
+              u.user_course_enrollments.map do |enrollment|
                 "#{enrollment.course.title}: #{enrollment.progress || 0}%"
               end.join("<br>").html_safe
             end

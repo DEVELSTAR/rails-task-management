@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_11_081823) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_11_113840) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -142,6 +142,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_11_081823) do
     t.integer "level", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "course_modules_count"
+    t.integer "user_course_enrollments_count"
   end
 
   create_table "lesson_contents", force: :cascade do |t|
@@ -271,6 +273,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_11_081823) do
     t.string "password_digest", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "user_course_enrollments_count"
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
