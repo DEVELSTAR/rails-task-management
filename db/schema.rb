@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_10_074039) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_11_081823) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -164,6 +164,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_10_074039) do
     t.index ["course_module_id"], name: "index_lessons_on_course_module_id"
   end
 
+  create_table "notifications", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "course_id"
+    t.string "notification_type", null: false
+    t.boolean "read", default: false
+    t.datetime "read_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["course_id"], name: "index_notifications_on_course_id"
+    t.index ["user_id"], name: "index_notifications_on_user_id"
+  end
+
   create_table "packages", force: :cascade do |t|
     t.string "title"
     t.text "description"
@@ -272,6 +284,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_10_074039) do
   add_foreign_key "course_packages", "packages"
   add_foreign_key "lesson_contents", "lessons"
   add_foreign_key "lessons", "course_modules"
+  add_foreign_key "notifications", "courses"
+  add_foreign_key "notifications", "users"
   add_foreign_key "profiles", "users"
   add_foreign_key "tasks", "users"
   add_foreign_key "user_assessment_results", "assessments"

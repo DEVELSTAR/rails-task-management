@@ -1,4 +1,3 @@
-# app/admin/dashboard.rb
 ActiveAdmin.register_page "Dashboard" do
   menu priority: 1, label: "Dashboard"
 
@@ -21,7 +20,6 @@ ActiveAdmin.register_page "Dashboard" do
           table_for AdminUser.limit(10) do
             column(:email)
             column(:sign_in_count)
-            # column("Last Login", &:last_sign_in_at)
           end
         end
       end
@@ -33,15 +31,30 @@ ActiveAdmin.register_page "Dashboard" do
           table_for User.limit(10) do
             column(:email)
             column("Enrolled Courses") { |u| u.user_course_enrollments.count }
-            column("Completed Courses") { |u| u.user_course_enrollments.where(status: "completed").count }
-            column("In Progress") { |u| u.user_course_enrollments.where(status: "in_progress").count }
+            column("Completed Courses") { |u| u.user_course_enrollments.where(status: 'completed').count }
+            column("In Progress") { |u| u.user_course_enrollments.where(status: 'in_progress').count }
             column("Courses & Progress") do |u|
-            u.user_course_enrollments.includes(:course).map do |enrollment|
+              u.user_course_enrollments.includes(:course).map do |enrollment|
                 "#{enrollment.course.title}: #{enrollment.progress || 0}%"
-            end.join("<br>").html_safe
+              end.join("<br>").html_safe
             end
           end
           div { link_to "View All Users", admin_users_path }
+        end
+      end
+    end
+
+    # 📊 Charts Section
+    columns do
+      column do
+        panel "Course Enrollments Chart" do
+          render partial: "admin/charts/course_enrollments"
+        end
+      end
+
+      column do
+        panel "Course Completion Chart" do
+          render partial: "admin/charts/course_completion"
         end
       end
     end

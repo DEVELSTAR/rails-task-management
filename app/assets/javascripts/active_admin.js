@@ -1,4 +1,6 @@
 //= require active_admin/base
+//= require chartkick
+//= require Chart.bundle
 
 document.addEventListener('DOMContentLoaded', function() {
   // Select flash messages container (Active Admin uses #flash for notices)
