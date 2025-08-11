@@ -62,7 +62,7 @@ gem "sassc-rails"     # For Active Admin CSS
 gem "active_admin_theme"
 gem "font-awesome-sass", "~> 6.5.2"
 gem "kaminari"
-gem "country_select", "~> 8.0"
+gem "country_select", "~> 11.0"
 gem "jsonapi-serializer"
 gem "chartkick"
 gem "groupdate"
