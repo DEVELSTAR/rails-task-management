@@ -5,8 +5,18 @@ module Api
 
       def index
         courses = Course.includes(
-          course_modules: { lessons: [:lesson_contents, { lesson_assessment: :assessment_questions }] },
-          final_assessment: :assessment_questions
+          :thumbnail_attachment, thumbnail_attachment: :blob,
+          course_modules: {
+            lessons: [
+              { lesson_contents: [
+                  :image_attachment, { image_attachment: :blob },
+                  :video_attachment, { video_attachment: :blob }
+                ]
+              },
+              { lesson_assessment: { assessment_questions: :assessment_answers } }
+            ]
+          },
+          final_assessment: { assessment_questions: :assessment_answers }
         )
 
         render json: courses.map { |course| CourseSerializer.new(course).as_json }
@@ -30,8 +40,18 @@ module Api
 
       def set_course
         @course = Course.includes(
-          course_modules: { lessons: [:lesson_contents, { lesson_assessment: :assessment_questions }] },
-          final_assessment: :assessment_questions
+          :thumbnail_attachment, thumbnail_attachment: :blob,
+          course_modules: {
+            lessons: [
+              { lesson_contents: [
+                  :image_attachment, { image_attachment: :blob },
+                  :video_attachment, { video_attachment: :blob }
+                ]
+              },
+              { lesson_assessment: { assessment_questions: :assessment_answers } }
+            ]
+          },
+          final_assessment: { assessment_questions: :assessment_answers }
         ).find(params[:id])
       end
 

@@ -1,3 +1,4 @@
+# spec/factories/course_modules.rb
 FactoryBot.define do
   factory :course_module do
     sequence(:title) { |n| "Module #{n}" }

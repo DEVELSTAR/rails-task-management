@@ -1,4 +1,5 @@
-FactoryBot.define do
+ # spec/factories/courses.rb
+ FactoryBot.define do
   factory :course do
     title       { "Ruby Basics" }
     description { "Learn the fundamentals of Ruby" }

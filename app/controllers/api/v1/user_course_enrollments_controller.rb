@@ -62,9 +62,9 @@ module Api
           .includes(course: { course_modules: { lessons: :lesson_assessment }, final_assessment: {} })
           .find_by(course_id: params[:id])
 
-        unless enrollment
+          unless enrollment
           return render json: { error: "You are not enrolled in this course" }, status: :not_found
-        end
+          end
         enrollment.recalculate_progress!
         modules_data = enrollment.course.course_modules.map do |course_module|
           {

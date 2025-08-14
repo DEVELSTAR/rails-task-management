@@ -1,3 +1,4 @@
+# spec/factories/assessment_questions.rb
 FactoryBot.define do
   factory :assessment_question do
     sequence(:question_text) { |n| "Question #{n}" }

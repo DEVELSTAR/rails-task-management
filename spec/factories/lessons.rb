@@ -1,3 +1,4 @@
+# spec/factories/lessons.rb
 FactoryBot.define do
   factory :lesson do
     sequence(:title) { |n| "Lesson #{n}" }

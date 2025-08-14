@@ -3,8 +3,7 @@ require 'rails_helper'
 
 RSpec.describe Api::V1::TasksController, type: :request do
   let(:user) { create(:user) }
-  let(:token) { Api::V1::JwtService.encode(user_id: user.id) }
-  let(:headers) { { 'token' => token } }
+  let(:headers) { auth_headers(user) }
 
   let(:valid_attributes) do
     {
@@ -19,10 +18,6 @@ RSpec.describe Api::V1::TasksController, type: :request do
 
   let(:invalid_attributes) do
     { task: { title: '' } }
-  end
-
-  def json
-    JSON.parse(response.body)
   end
 
   describe 'GET /api/v1/tasks' do

@@ -8,14 +8,12 @@ RSpec.describe Api::V1::QuranVersesController, type: :request do
     it 'returns paginated verses' do
       get '/api/v1/quran_verses', params: { page: 1, per_page: 10 }
       expect(response).to have_http_status(:ok)
-      json = JSON.parse(response.body)
       expect(json['verses'].size).to eq(10)
       expect(json['meta']['total_count']).to eq(15)
     end
 
     it 'returns 10 by default if per_page is not set' do
       get '/api/v1/quran_verses'
-      json = JSON.parse(response.body)
       expect(json['verses'].size).to eq(10)
     end
   end
@@ -33,7 +31,6 @@ RSpec.describe Api::V1::QuranVersesController, type: :request do
     it 'returns not found for non-existent verse' do
       delete '/api/v1/quran_verses/999999'
       expect(response).to have_http_status(:not_found)
-      json = JSON.parse(response.body)
       expect(json['error']).to eq('Verse not found')
     end
   end
@@ -58,7 +55,6 @@ RSpec.describe Api::V1::QuranVersesController, type: :request do
       }
 
       expect(response).to have_http_status(:created)
-      json = JSON.parse(response.body)
       expect(json['surah_name']).to eq('Al-Fatiha')
     end
 
@@ -76,7 +72,6 @@ RSpec.describe Api::V1::QuranVersesController, type: :request do
       post '/api/v1/quran_verses/fetch_verse', params: { ayah_number: 1, language: 'en.asad' }
 
       expect(response).to have_http_status(:service_unavailable)
-      json = JSON.parse(response.body)
       expect(json['error']).to eq('API Failure')
     end
   end
