@@ -10,7 +10,7 @@ module Api
                     .per(params[:per_page] || 10)
 
         render json: {
-          data: users.map { |user| UserSerializer.new(user).as_json },
+          data: users.map { |user| UserSerializer.new(user).serializable_hash[:data] },
           meta: paginate(users)
         }
       end
@@ -23,9 +23,9 @@ module Api
         user = User.new(user_params)
         if user.save
           token = JwtService.encode(user_id: user.id)
-          render json: { user: UserSerializer.new(user).as_json, token: token }, status: :created
+          render json: { data: UserSerializer.new(user).serializable_hash[:data], token: token }, status: :created
         else
-          render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
+          render json: { errors: user.errors.full_messages }, status: :unprocessable_content
         end
       end
 
@@ -33,7 +33,7 @@ module Api
         if @user.update(user_params)
           render json: UserSerializer.new(@user).as_json
         else
-          render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
+          render json: { errors: @user.errors.full_messages }, status: :unprocessable_content
         end
       end
 
@@ -42,7 +42,7 @@ module Api
         if user&.authenticate(params[:password])
           token = JwtService.encode(user_id: user.id)
           render json: {
-            user: UserSerializer.new(user, include: [:profile, :addresses]).serializable_hash,
+            data: UserSerializer.new(user).serializable_hash[:data],
             token: token
           }, status: :ok
         else

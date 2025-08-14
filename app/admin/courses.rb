@@ -35,8 +35,9 @@ ActiveAdmin.register Course do
     actions
   end
 
-  member_action :clone, method: :post do
+  member_action :duplicate, method: :post do
     original = Course.find(params[:id])
+
     cloned = original.dup
     random_number = rand(1000..9999)
     cloned.title = "#{original.title}-Copy (#{random_number})"
@@ -105,9 +106,8 @@ ActiveAdmin.register Course do
     redirect_to admin_course_path(cloned), notice: "Course cloned successfully."
   end
 
-  # Add button to UI
-  action_item :clone, only: :show do
-    link_to "Clone Course", clone_admin_course_path(resource), method: :post
+  action_item :duplicate, only: :show do
+    link_to "Clone Course", duplicate_admin_course_path(resource), method: :post
   end
 
   form do |f|
@@ -179,6 +179,26 @@ ActiveAdmin.register Course do
     f.actions
   end
 
+  controller do
+    def find_resource
+      Course
+        .includes(
+          :thumbnail_attachment,
+          course_modules: {
+            lessons: [
+              :user_lesson_statuses,
+              { lesson_contents: [:image_attachment, :video_attachment] },
+              { lesson_assessment: { assessment_questions: :assessment_answers } }
+            ]
+          },
+          final_assessment: { assessment_questions: :assessment_answers }
+        )
+        .where(id: params[:id])
+        .order("course_modules.position", "lessons.position", "lesson_contents.position")
+        .first!
+    end
+  end
+
   show do
     attributes_table do
       row :title
@@ -199,26 +219,22 @@ ActiveAdmin.register Course do
     end
 
     panel "Modules & Lessons" do
-      course.course_modules.order(:position).each do |mod|
+      course.course_modules.each do |mod|
         panel "Module: #{mod.title} (Position: #{mod.position})" do
           para mod.description
-          mod.lessons.order(:position).each do |lesson|
+          mod.lessons.each do |lesson|
             panel "Lesson: #{lesson.title} (Position: #{lesson.position})" do
               para lesson.description
 
               if lesson.lesson_contents.any?
-                table_for lesson.lesson_contents.order(:position) do
+                table_for lesson.lesson_contents do
                   column("Content Type") { |c| c.content_type }
                   column("Data") { |c| c.content_data }
                   column("Image") do |c|
-                    if c.image.attached?
-                      image_tag url_for(c.image), size: "100x100"
-                    end
+                    image_tag(url_for(c.image), size: "100x100") if c.image.attached?
                   end
                   column("Video") do |c|
-                    if c.video.attached?
-                      link_to "View Video", url_for(c.video), target: "_blank"
-                    end
+                    link_to("View Video", url_for(c.video), target: "_blank") if c.video.attached?
                   end
                   column("Position") { |c| c.position }
                 end

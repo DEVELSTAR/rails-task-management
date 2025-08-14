@@ -67,8 +67,6 @@ ActiveAdmin.register User do
           row :avatar do |p|
             if p.avatar.attached?
               image_tag url_for(p.avatar), height: 100
-            else
-              status_tag "No Avatar", :warning
             end
           end
         end

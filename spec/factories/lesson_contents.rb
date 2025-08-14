@@ -1,8 +1,8 @@
 FactoryBot.define do
   factory :lesson_content do
-    lesson { nil }
-    content_type { 1 }
-    content_data { "" }
-    position { 1 }
+    content_type { "text" }
+    sequence(:content_data) { |n| "Content data #{n}" }
+    sequence(:position) { |n| n }
+    association :lesson
   end
 end

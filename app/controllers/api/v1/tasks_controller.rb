@@ -19,7 +19,7 @@ module Api
         if task.save
           render json: TaskSerializer.new(task), status: :created
         else
-          render json: { errors: task.errors.full_messages }, status: :unprocessable_entity
+          render json: { errors: task.errors.full_messages }, status: :unprocessable_content
         end
       end
 
@@ -27,7 +27,7 @@ module Api
         if @task.update(task_params)
           render json: TaskSerializer.new(@task)
         else
-          render json: { errors: @task.errors.full_messages }, status: :unprocessable_entity
+          render json: { errors: @task.errors.full_messages }, status: :unprocessable_content
         end
       end
 
@@ -41,7 +41,7 @@ module Api
         if result[:success]
           render json: { message: result[:message] }, status: :ok
         else
-          render json: { errors: result[:errors] }, status: :unprocessable_entity
+          render json: { errors: result[:errors] }, status: :unprocessable_content
         end
       end
 
@@ -51,7 +51,7 @@ module Api
         if tasks.any?
           render json: { message: "All tasks successfully deleted!" }, status: :ok
         else
-          render json: { errors: [ "No tasks to delete" ] }, status: :unprocessable_entity
+          render json: { errors: [ "No tasks to delete" ] }, status: :unprocessable_content
         end
       end
 

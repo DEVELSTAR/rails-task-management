@@ -18,7 +18,7 @@ module Api
               status: user_lesson_status.status
             }
           else
-            render json: { errors: user_lesson_status.errors.full_messages }, status: :unprocessable_entity
+            render json: { errors: user_lesson_status.errors.full_messages }, status: :unprocessable_content
           end
         else
           render json: { error: "You are not enrolled in this course" }, status: :forbidden

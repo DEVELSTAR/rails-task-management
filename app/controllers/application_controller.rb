@@ -22,7 +22,7 @@ class ApplicationController < ActionController::Base
       redirect_to admin_root_path
     else
       flash.now[:alert] = "Invalid email or password"
-      render :admin_login, status: :unprocessable_entity
+      render :admin_login, status: :unprocessable_content
     end
   end
 

@@ -30,7 +30,7 @@ module Api
         if @enrollment.destroy
           render json: { message: "Unenrolled successfully#{' and progress reset' if params[:reset_progress] == 'true'}." }
         else
-          render json: { error: "Unable to unenroll." }, status: :unprocessable_entity
+          render json: { error: "Unable to unenroll." }, status: :unprocessable_content
         end
       end
 
@@ -53,7 +53,7 @@ module Api
             progress: enrollment.progress
           }, status: :created
         else
-          render json: { errors: enrollment.errors.full_messages }, status: :unprocessable_entity
+          render json: { errors: enrollment.errors.full_messages }, status: :unprocessable_content
         end
       end
 

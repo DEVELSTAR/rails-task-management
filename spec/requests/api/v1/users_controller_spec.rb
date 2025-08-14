@@ -13,7 +13,7 @@ RSpec.describe Api::V1::UsersController, type: :request do
       get '/api/v1/users'
       expect(response).to have_http_status(:ok)
       expect(json['data'].size).to eq(3)
-      expect(json['data'].first['attributes']).to have_key('email')
+      expect(json['data'][0]['attributes']).to have_key('email')
       expect(json['meta']).to include('total_count' => 3)
     end
   end
@@ -41,13 +41,13 @@ RSpec.describe Api::V1::UsersController, type: :request do
       }.to change(User, :count).by(1)
 
       expect(response).to have_http_status(:created)
-      expect(json['user']).to include('email' => 'user@example.com')
+      expect(json['data']['attributes']).to include('email' => 'user@example.com')
       expect(json).to have_key('token')
     end
 
     it 'returns errors for invalid attributes' do
       post '/api/v1/users/register', params: { user: { email: '', password: 'password' } }
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(json['errors']).to include("Email can't be blank")
     end
   end
@@ -58,7 +58,7 @@ RSpec.describe Api::V1::UsersController, type: :request do
     it 'returns token for valid credentials' do
       post '/api/v1/users/login', params: { email: 'user@example.com', password: 'password' }
       expect(response).to have_http_status(:ok)
-      expect(json['user']).to include('email' => 'user@example.com')
+      expect(json['data']['attributes']['email']).to eq('user@example.com')
       expect(json).to have_key('token')
     end
 

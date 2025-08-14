@@ -72,7 +72,7 @@ RSpec.describe Api::V1::TasksController, type: :request do
 
     it 'returns errors for invalid attributes' do
       post '/api/v1/tasks', params: invalid_attributes, headers: headers
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(json['errors']).to include("Title can't be blank")
     end
   end
@@ -89,7 +89,7 @@ RSpec.describe Api::V1::TasksController, type: :request do
 
     it 'returns errors for invalid attributes' do
       patch "/api/v1/tasks/#{task.id}", params: invalid_attributes, headers: headers
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(json['errors']).to include("Title can't be blank")
     end
 
@@ -129,14 +129,14 @@ RSpec.describe Api::V1::TasksController, type: :request do
 
     it 'returns errors for non-existent task IDs' do
       delete '/api/v1/tasks/bulk_destroy', params: { task_ids: [ task1.id, 999 ] }, headers: headers
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(json['errors']).to include('Tasks with IDs 999 not found')
       expect(Task.exists?(task1.id)).to be_truthy
     end
 
     it 'returns errors for empty task IDs' do
       delete '/api/v1/tasks/bulk_destroy', params: { task_ids: [] }, headers: headers
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(json['errors']).to include("Tasks with IDs  not found")
     end
   end
@@ -155,7 +155,7 @@ RSpec.describe Api::V1::TasksController, type: :request do
     it 'returns error when no tasks exist' do
       Task.destroy_all
       delete '/api/v1/tasks/delete_all', headers: headers
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(json['errors']).to include('No tasks to delete')
     end
   end

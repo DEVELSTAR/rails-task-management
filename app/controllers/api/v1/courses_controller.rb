@@ -22,7 +22,7 @@ module Api
         if course.save
           render json: CourseSerializer.new(course), status: :created
         else
-          render json: { errors: course.errors.full_messages }, status: :unprocessable_entity
+          render json: { errors: course.errors.full_messages }, status: :unprocessable_content
         end
       end
 

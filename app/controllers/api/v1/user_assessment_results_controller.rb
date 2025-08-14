@@ -20,13 +20,13 @@ module Api
           # Expect params[:answers] to be an array of { question_id: id, answer_id: id }
           answers = params[:answers] || []
           if answers.blank?
-            return render json: { errors: ["Answers are required"] }, status: :unprocessable_entity
+            return render json: { errors: ["Answers are required"] }, status: :unprocessable_content
           end
 
           # Fetch questions for the assessment
           questions = assessment.assessment_questions.includes(:assessment_answers)
           if questions.empty?
-            return render json: { errors: ["No questions found for this assessment"] }, status: :unprocessable_entity
+            return render json: { errors: ["No questions found for this assessment"] }, status: :unprocessable_content
           end
 
           # Calculate score
@@ -56,7 +56,7 @@ module Api
               re_attempted_at: result.updated_at
             }, status: result.previously_new_record? ? :created : :ok
           else
-            render json: { errors: result.errors.full_messages }, status: :unprocessable_entity
+            render json: { errors: result.errors.full_messages }, status: :unprocessable_content
           end
         else
           render json: { error: "You are not enrolled in this course or cannot attempt this assessment" }, status: :forbidden

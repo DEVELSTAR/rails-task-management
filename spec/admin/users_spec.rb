@@ -21,29 +21,32 @@ RSpec.describe "Admin::Users", type: :feature do
     expect(page).to have_content(user.email)
   end
 
-  it "creates a new user" do
-    visit new_admin_user_path
+it "creates a new user" do
+  visit new_admin_user_path
 
-    fill_in "Email", with: "newuser@example.com"
-    fill_in "Password", with: "secure123"
-    fill_in "Password confirmation", with: "secure123"
-    click_button "Create User"
+  fill_in "Email", with: "newuser@example.com"
+  fill_in "Password", with: "secure123"
+  fill_in "Password confirmation", with: "secure123"
+  fill_in "Name", with: "Test Name" # <-- add this
+  click_button "Create User"
 
-    expect(page).to have_content("newuser@example.com")
-  end
+  expect(page).to have_content("newuser@example.com")
+end
 
-  it "updates user without changing password" do
-    visit edit_admin_user_path(user)
+it "updates user without changing password" do
+  visit edit_admin_user_path(user)
 
-    fill_in "Email", with: "updated_user@example.com"
-    fill_in "Password", with: ""
-    fill_in "Password confirmation", with: ""
-    click_button "Update User"
+  fill_in "Email", with: "updated_user@example.com"
+  fill_in "Name", with: "Updated Name" # <-- add this
+  fill_in "Password", with: ""
+  fill_in "Password confirmation", with: ""
+  click_button "Update User"
 
-    expect(page).to have_content("updated_user@example.com")
-    user.reload
-    expect(user.authenticate("userpass")).to be_truthy
-  end
+  expect(page).to have_content("updated_user@example.com")
+  user.reload
+  expect(user.authenticate("userpass")).to be_truthy
+end
+
 
   it "shows validation error for password mismatch" do
     visit edit_admin_user_path(user)
