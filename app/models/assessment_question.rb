@@ -11,6 +11,6 @@ class AssessmentQuestion < ApplicationRecord
   end
 
   def correct_answer
-    assessment_answers.find_by(is_correct: true)
+    assessment_answers.detect(&:is_correct)
   end
 end

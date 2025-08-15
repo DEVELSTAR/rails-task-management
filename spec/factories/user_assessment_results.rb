@@ -9,3 +9,11 @@ FactoryBot.define do
     answers { "" }
   end
 end
+# FactoryBot.define do
+#   factory :user_assessment_result do
+#     association :user
+#     association :assessment
+#     score { 0 }
+#     attempted_at { nil }
+#   end
+# end

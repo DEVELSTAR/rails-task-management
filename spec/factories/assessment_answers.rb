@@ -4,5 +4,13 @@ FactoryBot.define do
     answer_text { "An object-oriented programming language" }
     is_correct { true }
     assessment_question
+
+    trait :correct do
+      is_correct { true }
+    end
+
+    trait :incorrect do
+      is_correct { false }
+    end
   end
 end

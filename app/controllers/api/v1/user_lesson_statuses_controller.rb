@@ -9,7 +9,11 @@ module Api
         if enrollment
           user_lesson_status = current_user.user_lesson_statuses.find_or_initialize_by(lesson: lesson)
 
-          user_lesson_status.status = params[:status]
+          begin
+            user_lesson_status.status = params[:status]
+          rescue ArgumentError
+            return render json: { errors: ["Invalid status"] }, status: :unprocessable_content
+          end
 
           if user_lesson_status.save
             enrollment.recalculate_progress!

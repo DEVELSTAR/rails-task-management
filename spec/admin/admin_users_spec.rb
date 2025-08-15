@@ -4,13 +4,7 @@ RSpec.describe "AdminUsers", type: :feature do
   let!(:admin_user) { AdminUser.create!(email: "admin@example.com", password: "password", password_confirmation: "password") }
 
   before do
-    visit admin_login_path
-
-    fill_in "Email", with: admin_user.email
-    fill_in "Password", with: "password"
-    click_button "Login"
-
-    expect(page).to have_content("Dashboard")
+    login_as_admin(admin_user)
   end
 
   it "shows admin users index" do

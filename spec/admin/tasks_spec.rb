@@ -7,13 +7,7 @@ RSpec.describe "Admin::Tasks", type: :feature do
   let!(:task) { Task.create!(title: "Sample Task", description: "Some details", status: "todo", user: user, due_date: Date.today + 1.week) }
 
   before do
-    visit admin_login_path
-
-    fill_in "Email", with: admin_user.email
-    fill_in "Password", with: "password"
-    click_button "Login"
-
-    expect(page).to have_content("Dashboard")
+    login_as_admin(admin_user)
   end
 
   it "shows the task index" do

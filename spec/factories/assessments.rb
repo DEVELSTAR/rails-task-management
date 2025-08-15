@@ -3,6 +3,7 @@ FactoryBot.define do
   factory :assessment do
     title { "Assessment" }
     instructions { "Answer the questions" }
+    association :assessable, factory: :lesson
 
     trait :with_questions_and_answers do
       after(:create) do |assessment|

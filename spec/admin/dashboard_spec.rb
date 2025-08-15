@@ -16,16 +16,7 @@ RSpec.describe "Admin::Dashboard", type: :feature do
   let!(:enrollment_in_progress) { UserCourseEnrollment.create!(user: user, course: course, status: "in_progress", progress: 50) }
 
   before do
-    visit admin_login_path
-    fill_in "Email", with: admin_user.email
-    fill_in "Password", with: "password"
-    click_button "Login"
-    expect(page).to have_content("Dashboard")
-    visit admin_login_path
-    fill_in "Email", with: admin_user.email
-    fill_in "Password", with: "password"
-    click_button "Login"
-    expect(page).to have_content("Dashboard")
+    login_as_admin(admin_user)
   end
 
   it "displays the Courses Overview panel" do

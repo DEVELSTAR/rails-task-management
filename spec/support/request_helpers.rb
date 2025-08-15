@@ -11,4 +11,12 @@ module RequestHelpers
   def json
     JSON.parse(response.body)
   end
+
+  def login_as_admin(admin_user)
+    visit '/admin/login'
+    fill_in 'Email', with: admin_user.email
+    fill_in 'Password', with: 'password'
+    click_button 'Login'
+    expect(page).to have_content("Dashboard") # confirm login
+  end
 end

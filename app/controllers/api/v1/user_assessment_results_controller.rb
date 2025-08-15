@@ -23,7 +23,6 @@ module Api
             return render json: { errors: ["Answers are required"] }, status: :unprocessable_content
           end
 
-          # Fetch questions for the assessment
           questions = assessment.assessment_questions.includes(:assessment_answers)
           if questions.empty?
             return render json: { errors: ["No questions found for this assessment"] }, status: :unprocessable_content
@@ -32,7 +31,7 @@ module Api
           # Calculate score
           correct_count = 0
           answers.each do |answer|
-            question = questions.find { |q| q.id == answer[:question_id].to_i }
+            question = questions.find { |q| q.id == answer["question_id"].to_i }
             correct_answer = question&.correct_answer
             if correct_answer && correct_answer.id == answer[:answer_id].to_i
               correct_count += 1

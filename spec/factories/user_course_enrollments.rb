@@ -8,3 +8,10 @@ FactoryBot.define do
     completed_at { "2025-08-08 11:02:42" }
   end
 end
+# FactoryBot.define do
+#   factory :user_course_enrollment do
+#     association :user
+#     association :course
+#     progress { 0 }
+#   end
+# end
