@@ -59,7 +59,7 @@ module Api
 
       def show
         enrollment = current_user.user_course_enrollments
-          .includes(course: { course_modules: { lessons: :lesson_assessment }, final_assessment: {} })
+          .includes(course: { course_modules: { lessons: [:lesson_assessment, :user_lesson_statuses] }, final_assessment: {} })
           .find_by(course_id: params[:id])
 
           unless enrollment
@@ -72,7 +72,7 @@ module Api
             description: course_module.description,
             position: course_module.position,
             lessons: course_module.lessons.map do |lesson|
-              user_lesson_status = lesson.user_lesson_statuses.find_by(user: current_user) || UserLessonStatus.new(status: :not_started)
+              user_lesson_status = lesson.user_lesson_statuses.find { |uls| uls.user_id == current_user.id } || UserLessonStatus.new(status: :not_started)
               lesson_assessment = lesson.lesson_assessment
               user_assessment_result = current_user.user_assessment_results.find_by(assessment: lesson_assessment) if lesson_assessment
 
@@ -117,7 +117,7 @@ module Api
         course = enrollment.course
 
         # Wipe lesson progress
-        lesson_ids = course.course_modules.joins(:lessons).pluck("lessons.id")
+        lesson_ids = course.lessons.ids
         current_user.user_lesson_statuses.where(lesson_id: lesson_ids).delete_all
 
         # Wipe assessment results

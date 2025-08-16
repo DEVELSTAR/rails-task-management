@@ -5,7 +5,7 @@ class Course < ApplicationRecord
   has_many :enrolled_users, through: :user_course_enrollments, source: :user
   has_many :assessments, as: :assessable, dependent: :destroy
   has_one :final_assessment, -> { where(assessable_type: "Course") },
-          class_name: "Assessment", as: :assessable, dependent: :destroy
+      class_name: "Assessment", as: :assessable, dependent: :destroy
   has_one_attached :thumbnail
   accepts_nested_attributes_for :course_modules, allow_destroy: true
   accepts_nested_attributes_for :final_assessment, allow_destroy: true
