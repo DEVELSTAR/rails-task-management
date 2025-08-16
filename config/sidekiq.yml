@@ -1,0 +1,5 @@
+# config/sidekiq.yml
+:queues:
+  - default
+  - mailers
+  - notifications

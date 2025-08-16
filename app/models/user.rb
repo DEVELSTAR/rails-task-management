@@ -12,11 +12,12 @@ class User < ApplicationRecord
   has_many :packages, through: :user_package_purchases
   has_one :profile, dependent: :destroy
   has_many :addresses, dependent: :destroy
+  has_many :notifications, dependent: :destroy
 
   accepts_nested_attributes_for :profile, allow_destroy: true
   accepts_nested_attributes_for :addresses, allow_destroy: true
   def self.ransackable_associations(auth_object = nil)
-    ["tasks", "user_lesson_statuses", "lessons", "user_course_enrollments", "enrolled_courses", "user_assessment_results", "user_package_purchases", "packages"]
+    ["tasks", "user_lesson_statuses", "lessons", "user_course_enrollments", "enrolled_courses", "user_assessment_results", "user_package_purchases", "packages", "notifications_id_eq"]
   end
 
   def to_s

@@ -46,7 +46,6 @@ module Api
         enrollment.progress = 0
 
         if enrollment.save
-          create_notification(current_user, course, :enrolled)
           render json: {
             course_id: course.id,
             status: enrollment.status,

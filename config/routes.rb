@@ -1,5 +1,7 @@
+require "sidekiq/web"
 Rails.application.routes.draw do
   ActiveAdmin.routes(self)
+  mount Sidekiq::Web => "/sidekiq"
 
   get "admin_login", to: "application#admin_login"
   post "create_admin_session", to: "application#create_admin_session"
@@ -56,6 +58,15 @@ Rails.application.routes.draw do
       resource :profile, only: [:show, :update]
       resources :addresses, only: [:index, :create, :update, :destroy]
       resources :user_course_enrollments, only: [:index, :destroy]
+      resources :notifications, only: [:index, :destroy] do
+        collection do
+          get :unread
+        end
+        member do
+          patch :mark_as_read
+          patch :mark_as_unread
+        end
+      end
     end
   end
 

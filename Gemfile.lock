@@ -122,6 +122,9 @@ GEM
     country_select (8.0.3)
       countries (~> 5.0)
     crass (1.0.6)
+    cronex (0.15.0)
+      tzinfo
+      unicode (>= 0.4.4.5)
     csv (3.3.5)
     date (3.4.1)
     debug (1.11.0)
@@ -327,6 +330,8 @@ GEM
     rdoc (6.14.2)
       erb
       psych (>= 4.0.0)
+    redis-client (0.25.2)
+      connection_pool
     regexp_parser (2.11.1)
     reline (0.6.2)
       io-console (~> 0.5)
@@ -397,6 +402,17 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
+    sidekiq (8.0.7)
+      connection_pool (>= 2.5.0)
+      json (>= 2.9.0)
+      logger (>= 1.6.2)
+      rack (>= 3.1.0)
+      redis-client (>= 0.23.2)
+    sidekiq-cron (2.3.1)
+      cronex (>= 0.13.0)
+      fugit (~> 1.8, >= 1.11.1)
+      globalid (>= 1.0.1)
+      sidekiq (>= 6.5.0)
     simplecov (0.22.0)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
@@ -446,6 +462,7 @@ GEM
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     unaccent (0.4.0)
+    unicode (0.4.4.5)
     unicode-display_width (3.1.4)
       unicode-emoji (~> 4.0, >= 4.0.4)
     unicode-emoji (4.0.4)
@@ -500,6 +517,8 @@ DEPENDENCIES
   rubocop-rails-omakase
   sassc-rails
   selenium-webdriver
+  sidekiq
+  sidekiq-cron
   simplecov
   solid_cable
   solid_cache

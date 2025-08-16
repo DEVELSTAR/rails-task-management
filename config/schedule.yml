@@ -1,0 +1,3 @@
+daily_course_reminder:
+  cron: "0 8 * * *"   # every day at 8 AM
+  class: "DailyCourseReminderJob"

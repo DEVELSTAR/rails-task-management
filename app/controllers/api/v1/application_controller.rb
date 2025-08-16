@@ -21,14 +21,6 @@ module Api
       def current_user
         @current_user
       end
-
-      def create_notification(user, course, type)
-        Notification.create!(
-          user: user,
-          course: course,
-          notification_type: type
-        )
-      end
     end
   end
 end
